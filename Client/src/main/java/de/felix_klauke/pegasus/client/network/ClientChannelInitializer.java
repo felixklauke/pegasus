@@ -21,6 +21,8 @@ import de.felix_klauke.pegasus.protocol.decoder.PacketDecoder;
 import de.felix_klauke.pegasus.protocol.encoder.PacketEncoder;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 
 /**
  * Created by Felix Klauke for project Pegasus on 05.02.2016.
@@ -31,7 +33,11 @@ public class ClientChannelInitializer extends ChannelInitializer< SocketChannel 
     protected void initChannel( SocketChannel socketChannel ) throws Exception {
         Client.getLogger().info( "New Channel has been initialized." );
 
-        socketChannel.pipeline().addLast( new PacketEncoder(), new PacketDecoder() );
+        socketChannel.pipeline().addLast(
+                new LengthFieldPrepender( 4 ),
+                new PacketEncoder(),
+                new LengthFieldBasedFrameDecoder( 1024, 0, 4, 0, 4 ),
+                new PacketDecoder() );
     }
 
 }
