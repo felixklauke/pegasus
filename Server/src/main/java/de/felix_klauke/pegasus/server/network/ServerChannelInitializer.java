@@ -16,6 +16,8 @@
 
 package de.felix_klauke.pegasus.server.network;
 
+import de.felix_klauke.pegasus.protocol.decoder.PacketDecoder;
+import de.felix_klauke.pegasus.protocol.encoder.PacketEncoder;
 import de.felix_klauke.pegasus.server.Server;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
@@ -29,6 +31,8 @@ public class ServerChannelInitializer extends ChannelInitializer< SocketChannel 
     protected void initChannel( SocketChannel socketChannel ) throws Exception {
         Server.getLogger().info( "New Channel has been initialized." );
         Server.getLogger().info( "Hostname: " + socketChannel.remoteAddress() );
+
+        socketChannel.pipeline().addLast( new PacketEncoder(), new PacketDecoder() );
     }
 
 }

@@ -47,7 +47,7 @@ public class NettyClient {
                     .channel( NioSocketChannel.class )
                     .handler( new ClientChannelInitializer() )
                     .connect( serverHostname, serverPort ).sync();
-
+            
             future.sync().channel().closeFuture().sync();
 
         } catch ( InterruptedException e ) {

@@ -14,24 +14,28 @@
  * limitations under the License.
  */
 
-package de.felix_klauke.pegasus.client.network;
+package de.felix_klauke.pegasus.protocol.packets;
 
-import de.felix_klauke.pegasus.client.Client;
-import de.felix_klauke.pegasus.protocol.decoder.PacketDecoder;
-import de.felix_klauke.pegasus.protocol.encoder.PacketEncoder;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.socket.SocketChannel;
+import de.felix_klauke.pegasus.protocol.Packet;
+import io.netty.buffer.ByteBuf;
 
 /**
  * Created by Felix Klauke for project Pegasus on 05.02.2016.
  */
-public class ClientChannelInitializer extends ChannelInitializer< SocketChannel > {
+public class PacketTest extends Packet {
 
-    @Override
-    protected void initChannel( SocketChannel socketChannel ) throws Exception {
-        Client.getLogger().info( "New Channel has been initialized." );
-
-        socketChannel.pipeline().addLast( new PacketEncoder(), new PacketDecoder() );
+    public PacketTest() {
+        super( PacketType.TEST );
     }
 
+
+    @Override
+    public void encode( ByteBuf byteBuf ) {
+
+    }
+
+    @Override
+    public void decode( ByteBuf byteBuf ) {
+
+    }
 }
