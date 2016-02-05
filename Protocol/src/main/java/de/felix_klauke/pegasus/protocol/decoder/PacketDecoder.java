@@ -17,7 +17,6 @@
 package de.felix_klauke.pegasus.protocol.decoder;
 
 import de.felix_klauke.pegasus.protocol.Packet;
-import de.felix_klauke.pegasus.protocol.packets.PacketTest;
 import de.felix_klauke.pegasus.protocol.packets.PacketType;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -40,10 +39,6 @@ public class PacketDecoder extends ByteToMessageDecoder {
         }
         Packet packet = packetType.getPacketClass().newInstance();
         packet.decode( byteBuf );
-
-        if ( packet instanceof PacketTest ) {
-            System.out.println( "Received Test packet" );
-        }
     }
 
 }

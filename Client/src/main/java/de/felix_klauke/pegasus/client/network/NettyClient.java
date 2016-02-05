@@ -16,7 +16,6 @@
 
 package de.felix_klauke.pegasus.client.network;
 
-import de.felix_klauke.pegasus.protocol.packets.PacketTest;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -48,8 +47,6 @@ public class NettyClient {
                     .channel( NioSocketChannel.class )
                     .handler( new ClientChannelInitializer() )
                     .connect( serverHostname, serverPort ).sync();
-
-            future.channel().writeAndFlush( new PacketTest() );
 
             future.sync().channel().closeFuture().sync();
 
