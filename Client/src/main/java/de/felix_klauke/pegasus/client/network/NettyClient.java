@@ -16,6 +16,12 @@
 
 package de.felix_klauke.pegasus.client.network;
 
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+
 /**
  * Created by Felix Klauke for project Pegasus on 05.02.2016.
  */
@@ -24,13 +30,29 @@ public class NettyClient {
     private final String serverHostname;
     private final int serverPort;
 
+    private Bootstrap bootstrap;
+
     public NettyClient( String serverHostname, int serverPort ) {
         this.serverHostname = serverHostname;
         this.serverPort = serverPort;
+        this.bootstrap = new Bootstrap();
     }
 
     public void start() {
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
 
+        try {
+            ChannelFuture future = bootstrap
+                    .group( workerGroup )
+                    .channel( NioSocketChannel.class )
+                    .handler( new ClientChannelInitializer() )
+                    .connect( serverHostname, serverPort ).sync();
+
+            future.sync().channel().closeFuture().sync();
+
+        } catch ( InterruptedException e ) {
+            e.printStackTrace();
+        }
     }
 
 }

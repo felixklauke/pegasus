@@ -16,19 +16,45 @@
 
 package de.felix_klauke.pegasus.server.network;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+
 /**
  * Created by Felix Klauke for project Pegasus on 05.02.2016.
  */
 public class NettyServer {
 
     private final int serverPort;
+    private final ServerBootstrap bootstrap;
 
     public NettyServer( int serverPort ) {
         this.serverPort = serverPort;
+        this.bootstrap = new ServerBootstrap();
     }
 
+    /**
+     * Start the basic nettyserver
+     */
     public void start() {
+        NioEventLoopGroup bossGroup = new NioEventLoopGroup();
+        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
 
+        try {
+            ChannelFuture future = bootstrap
+                    .group( bossGroup, workerGroup )
+                    .channel( NioServerSocketChannel.class )
+                    .option( ChannelOption.SO_BACKLOG, 128 )
+                    .childOption( ChannelOption.SO_KEEPALIVE, true )
+                    .childHandler( new ServerChannelInitializer() )
+                    .bind( serverPort );
+
+            future.sync().channel().closeFuture().sync();
+        } catch ( InterruptedException e ) {
+            e.printStackTrace();
+        }
     }
 
 }

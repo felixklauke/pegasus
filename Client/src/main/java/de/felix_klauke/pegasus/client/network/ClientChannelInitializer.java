@@ -14,35 +14,20 @@
  * limitations under the License.
  */
 
-package de.felix_klauke.pegasus.server;
+package de.felix_klauke.pegasus.client.network;
 
-import de.felix_klauke.pegasus.server.network.NettyServer;
-
-import java.util.logging.Logger;
+import de.felix_klauke.pegasus.client.Client;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
 
 /**
  * Created by Felix Klauke for project Pegasus on 05.02.2016.
  */
-public class Server {
+public class ClientChannelInitializer extends ChannelInitializer< SocketChannel > {
 
-    private static final int SERVER_PORT = 27816;
-
-    private static final Logger logger = Logger.getLogger( Server.class.getSimpleName() );
-    private final NettyServer nettyServer;
-
-    public Server() {
-        nettyServer = new NettyServer( SERVER_PORT );
+    @Override
+    protected void initChannel( SocketChannel socketChannel ) throws Exception {
+        Client.getLogger().info( "New Channel has been initialized." );
     }
 
-    public static Logger getLogger() {
-        return logger;
-    }
-
-    public static void main( String[] args ) {
-        new Server().getNettyServer().start();
-    }
-
-    public NettyServer getNettyServer() {
-        return nettyServer;
-    }
 }
