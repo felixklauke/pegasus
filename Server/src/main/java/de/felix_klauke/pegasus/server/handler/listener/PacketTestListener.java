@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package de.felix_klauke.pegasus.protocol.encoder;
+package de.felix_klauke.pegasus.server.handler.listener;
 
-import de.felix_klauke.pegasus.protocol.Packet;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToByteEncoder;
+import de.felix_klauke.pegasus.protocol.packets.PacketTest;
+import de.felix_klauke.pegasus.protocol.packets.PacketType;
 
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 06.02.2016.
+ * //TODO: Remove Test Code
  */
-public class PacketEncoder extends MessageToByteEncoder< Packet > {
+public class PacketTestListener extends PacketListener< PacketTest > {
 
-    @Override
-    protected void encode( ChannelHandlerContext channelHandlerContext, Packet packet, ByteBuf out ) throws Exception {
-        out.writeInt( packet.getPacketType().getPacketID() );
-        packet.encode( out );
+    public PacketTestListener() {
+        super( PacketType.TEST.getPacketClass() );
     }
 
+    @Override
+    public void handlePacket( PacketTest packet ) {
+        System.out.println( "Received PacketTest!" );
+    }
 }

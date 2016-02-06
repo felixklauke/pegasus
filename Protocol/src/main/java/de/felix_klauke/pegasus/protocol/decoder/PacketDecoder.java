@@ -39,6 +39,7 @@ public class PacketDecoder extends ByteToMessageDecoder {
         }
         Packet packet = packetType.getPacketClass().newInstance();
         packet.decode( byteBuf );
+        list.add( packet );
     }
 
 }

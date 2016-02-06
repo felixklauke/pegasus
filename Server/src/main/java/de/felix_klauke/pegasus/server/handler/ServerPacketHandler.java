@@ -14,22 +14,28 @@
  * limitations under the License.
  */
 
-package de.felix_klauke.pegasus.protocol.encoder;
+package de.felix_klauke.pegasus.server.handler;
 
 import de.felix_klauke.pegasus.protocol.Packet;
-import io.netty.buffer.ByteBuf;
+import de.felix_klauke.pegasus.server.handler.listener.PacketTestListener;
+import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 06.02.2016.
  */
-public class PacketEncoder extends MessageToByteEncoder< Packet > {
+public class ServerPacketHandler extends ChannelHandlerAdapter {
 
-    @Override
-    protected void encode( ChannelHandlerContext channelHandlerContext, Packet packet, ByteBuf out ) throws Exception {
-        out.writeInt( packet.getPacketType().getPacketID() );
-        packet.encode( out );
+    private PacketHandler packetHandler;
+
+    public ServerPacketHandler() {
+        this.packetHandler = new PacketHandler();
+        //TODO: Remove Test Code
+        packetHandler.registerListener( new PacketTestListener() );
     }
 
+    @Override
+    public void channelRead( ChannelHandlerContext ctx, Object msg ) throws Exception {
+        packetHandler.handlePacket( ( Packet ) msg );
+    }
 }
