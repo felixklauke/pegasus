@@ -17,7 +17,6 @@
 package de.felix_klauke.pegasus.server.client;
 
 import com.google.common.collect.Lists;
-import de.felix_klauke.pegasus.protocol.Packet;
 import io.netty.channel.Channel;
 
 import java.util.List;
@@ -31,10 +30,6 @@ public class ClientManager {
 
     public ClientManager() {
         this.clients = Lists.newArrayList();
-    }
-
-    public List< Client > getClients() {
-        return clients;
     }
 
     public Client getClient( String username ) {
@@ -55,11 +50,12 @@ public class ClientManager {
         clients.add( client );
     }
 
-    public void sendPacket( Client client, Packet packet ) {
-        client.sendPacket( packet );
+    public void unregisterClient( Client client ) {
+        clients.remove( client );
     }
 
     public void authClient( Client client, String password ) {
+        //TODO: Add authentication
         client.setAuthed( true );
     }
 }
