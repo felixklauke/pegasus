@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package de.felix_klauke.pegasus.server.handler.listener;
+package de.felix_klauke.pegasus.client.handler;
 
-import de.felix_klauke.pegasus.protocol.packets.PacketTest;
-import de.felix_klauke.pegasus.protocol.packets.PacketType;
-import de.felix_klauke.pegasus.server.client.Client;
+import io.netty.channel.ChannelHandlerAdapter;
+import io.netty.channel.ChannelHandlerContext;
 
 /**
- * Created by Felix Klauke for project Pegasus on 06.02.2016.
- * //TODO: Remove Test Code
+ * Created by Felix Klauke for project Pegasus on 07.02.2016.
  */
-public class PacketTestListener extends PacketListener< PacketTest > {
-
-    public PacketTestListener() {
-        super( PacketType.TEST.getPacketClass() );
-    }
+public class ClientPacketHandler extends ChannelHandlerAdapter {
 
     @Override
-    public void handlePacket( Client client, PacketTest packet ) {
-        System.out.println( "Received PacketTest!" );
+    public void channelRead( ChannelHandlerContext ctx, Object msg ) throws Exception {
+
     }
 }

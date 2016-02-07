@@ -24,7 +24,9 @@ import de.felix_klauke.pegasus.protocol.Packet;
 public enum PacketType {
 
     UNKNOWN( 0x00, null ),
-    TEST( 0x01, PacketTest.class );
+    HANDSHAKE( 0x01, PacketHandshake.class ),
+    HANDSHAKE_RESPONSE( 0x02, PacketHandshakeResponse.class ),
+    TEST( 0x99, PacketTest.class );
 
     private int packetID;
     private Class< ? extends Packet > packetClass;
@@ -33,6 +35,11 @@ public enum PacketType {
         this.packetID = packetID;
         this.packetClass = packetClass;
     }
+
+    public static String getProtocolVersion() {
+        return "1";
+    }
+
 
     public static PacketType getTypeByID( int packetID ) {
         for ( PacketType type : values() ) {

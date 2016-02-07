@@ -16,6 +16,7 @@
 
 package de.felix_klauke.pegasus.server;
 
+import de.felix_klauke.pegasus.server.client.ClientManager;
 import de.felix_klauke.pegasus.server.network.NettyServer;
 
 import java.util.logging.Logger;
@@ -28,10 +29,16 @@ public class Server {
     private static final int SERVER_PORT = 27816;
 
     private static final Logger logger = Logger.getLogger( Server.class.getSimpleName() );
-    private final NettyServer nettyServer;
 
+    private static Server instance;
+    
+    private final NettyServer nettyServer;
+    private final ClientManager clientManager;
+    
     public Server() {
+        instance = this;
         nettyServer = new NettyServer( SERVER_PORT );
+        clientManager = new ClientManager();
     }
 
     public static Logger getLogger() {
@@ -42,7 +49,15 @@ public class Server {
         new Server().getNettyServer().start();
     }
 
+    public static Server getInstance() {
+        return instance;
+    }
+
     public NettyServer getNettyServer() {
         return nettyServer;
+    }
+
+    public ClientManager getClientManager() {
+        return clientManager;
     }
 }

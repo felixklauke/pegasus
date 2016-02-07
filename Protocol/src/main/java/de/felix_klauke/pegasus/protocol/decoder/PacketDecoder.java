@@ -19,6 +19,7 @@ package de.felix_klauke.pegasus.protocol.decoder;
 import de.felix_klauke.pegasus.protocol.Packet;
 import de.felix_klauke.pegasus.protocol.packets.PacketType;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.EmptyByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.UnsupportedMessageTypeException;
@@ -32,6 +33,7 @@ public class PacketDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode( ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List< Object > list ) throws Exception {
+        if ( byteBuf instanceof EmptyByteBuf ) return;
         PacketType packetType = PacketType.getTypeByID( byteBuf.readInt() );
 
         if ( packetType == PacketType.UNKNOWN ) {

@@ -17,6 +17,7 @@
 package de.felix_klauke.pegasus.server.handler;
 
 import de.felix_klauke.pegasus.protocol.Packet;
+import de.felix_klauke.pegasus.server.handler.listener.PacketHandshakeListener;
 import de.felix_klauke.pegasus.server.handler.listener.PacketTestListener;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
@@ -32,10 +33,18 @@ public class ServerPacketHandler extends ChannelHandlerAdapter {
         this.packetHandler = new PacketHandler();
         //TODO: Remove Test Code
         packetHandler.registerListener( new PacketTestListener() );
+        packetHandler.registerListener( new PacketHandshakeListener() );
     }
 
     @Override
     public void channelRead( ChannelHandlerContext ctx, Object msg ) throws Exception {
-        packetHandler.handlePacket( ( Packet ) msg );
+        Packet packet = ( Packet ) msg;
+        packetHandler.handlePacket( ctx.pipeline().channel(), packet );
+    }
+
+    @Override
+    public void exceptionCaught( ChannelHandlerContext ctx, Throwable cause ) throws Exception {
+        System.out.println( "Fehler: " + cause.getLocalizedMessage() );
+        cause.printStackTrace();
     }
 }

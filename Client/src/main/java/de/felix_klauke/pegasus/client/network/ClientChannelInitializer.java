@@ -17,8 +17,10 @@
 package de.felix_klauke.pegasus.client.network;
 
 import de.felix_klauke.pegasus.client.Client;
+import de.felix_klauke.pegasus.client.handler.ClientPacketHandler;
 import de.felix_klauke.pegasus.protocol.decoder.PacketDecoder;
 import de.felix_klauke.pegasus.protocol.encoder.PacketEncoder;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -29,6 +31,8 @@ import io.netty.handler.codec.LengthFieldPrepender;
  */
 public class ClientChannelInitializer extends ChannelInitializer< SocketChannel > {
 
+    private Channel channel;
+
     @Override
     protected void initChannel( SocketChannel socketChannel ) throws Exception {
         Client.getLogger().info( "New Channel has been initialized." );
@@ -37,7 +41,13 @@ public class ClientChannelInitializer extends ChannelInitializer< SocketChannel 
                 new LengthFieldPrepender( 4 ),
                 new PacketEncoder(),
                 new LengthFieldBasedFrameDecoder( 1024, 0, 4, 0, 4 ),
-                new PacketDecoder() );
+                new PacketDecoder(),
+                new ClientPacketHandler() );
+
+        channel = socketChannel.pipeline().channel();
     }
 
+    public Channel getChannel() {
+        return channel;
+    }
 }

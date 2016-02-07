@@ -17,6 +17,7 @@
 package de.felix_klauke.pegasus.server.handler.listener;
 
 import de.felix_klauke.pegasus.protocol.Packet;
+import de.felix_klauke.pegasus.server.client.Client;
 
 /**
  * Created by Felix Klauke for project Pegasus on 06.02.2016.
@@ -29,7 +30,7 @@ public abstract class PacketListener< T extends Packet > {
         this.clazz = clazz;
     }
 
-    public abstract void handlePacket( T packet );
+    public abstract void handlePacket( Client client, T packet );
 
     public Class< ? extends Packet > getClazz() {
         return clazz;

@@ -16,7 +16,8 @@
 
 package de.felix_klauke.pegasus.client.network;
 
-import de.felix_klauke.pegasus.protocol.packets.PacketTest;
+import de.felix_klauke.pegasus.protocol.packets.PacketHandshake;
+import de.felix_klauke.pegasus.protocol.packets.PacketType;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -33,6 +34,8 @@ public class NettyClient {
 
     private Bootstrap bootstrap;
 
+    private ClientChannelInitializer channelInitializer = new ClientChannelInitializer();
+
     public NettyClient( String serverHostname, int serverPort ) {
         this.serverHostname = serverHostname;
         this.serverPort = serverPort;
@@ -46,11 +49,11 @@ public class NettyClient {
             ChannelFuture future = bootstrap
                     .group( workerGroup )
                     .channel( NioSocketChannel.class )
-                    .handler( new ClientChannelInitializer() )
+                    .handler( channelInitializer )
                     .connect( serverHostname, serverPort ).sync();
 
-            //TODO: Remove Test Code
-            future.channel().writeAndFlush( new PacketTest() );
+            future.sync().channel().writeAndFlush( new PacketHandshake( PacketType.getProtocolVersion(), "Hey", "Hey"
+            ) );
 
             future.sync().channel().closeFuture().sync();
 
