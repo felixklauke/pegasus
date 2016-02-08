@@ -27,13 +27,19 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
  */
 public class NettyServer {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private final int serverPort;
     private final ServerBootstrap bootstrap;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public NettyServer( int serverPort ) {
         this.serverPort = serverPort;
         this.bootstrap = new ServerBootstrap();
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     /**
      * Start the basic nettyserver

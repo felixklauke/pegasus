@@ -26,12 +26,18 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public class ClientPacketHandler extends ChannelHandlerAdapter {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private PacketHandler packetHandler;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public ClientPacketHandler() {
         packetHandler = new PacketHandler();
         packetHandler.registerListener( new PacketHandshakeResponseListener() );
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     @Override
     public void channelRead( ChannelHandlerContext ctx, Object msg ) throws Exception {

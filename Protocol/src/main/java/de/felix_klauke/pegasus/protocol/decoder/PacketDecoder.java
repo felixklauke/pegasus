@@ -31,6 +31,8 @@ import java.util.List;
  */
 public class PacketDecoder extends ByteToMessageDecoder {
 
+    /* ------------------------- [ Methods ] ------------------------- */
+
     @Override
     protected void decode( ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List< Object > list ) throws Exception {
         if ( byteBuf instanceof EmptyByteBuf ) return;

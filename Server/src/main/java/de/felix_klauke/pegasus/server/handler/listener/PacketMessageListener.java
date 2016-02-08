@@ -26,11 +26,21 @@ import de.felix_klauke.pegasus.server.client.ClientManager;
  */
 public class PacketMessageListener extends PacketListener< PacketMessage > {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
+    /**
+     * The ClientManager that will get the related client when any data is received
+     */
     private ClientManager clientManager = Server.getInstance().getClientManager();
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public PacketMessageListener() {
         super( PacketMessage.class );
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
+
 
     @Override
     public void handlePacket( Client client, PacketMessage packet ) {

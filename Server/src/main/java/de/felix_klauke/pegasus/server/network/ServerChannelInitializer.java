@@ -30,6 +30,27 @@ import io.netty.handler.codec.LengthFieldPrepender;
  */
 public class ServerChannelInitializer extends ChannelInitializer< SocketChannel > {
 
+    /* ------------------------- [ Methods ] ------------------------- */
+
+    /**
+     * This method is used when Netty creates a new SocketChannel.
+     * The Pipeline will be created here and all En- and Decoders will be added.
+     * <p>
+     * Basically:
+     * <ul>
+     * <li>The LengthFieldPrepender: It will prepend a Field that contains the length of
+     * the data that will be passed through the pipeline.</li>
+     * <li>The PacketEncoder: It will write all the data of a packet into it. </li>
+     * <li>The LengthFieldBasedFrameDecoder: This Decoder is used to ensure that all data of
+     * a packet is received before the Decoding starts.</li>
+     * <li>The PacketDecoder: This Decoder will write the binary data into its Packet</li>
+     * <li>The ServerPacketHandler: The Packets created by the PacketDecoder will be handled
+     * here</li>
+     * </ul>
+     *
+     * @param socketChannel The channel created by the Netty server
+     * @throws Exception
+     */
     @Override
     protected void initChannel( SocketChannel socketChannel ) throws Exception {
         Server.getLogger().info( "New Channel has been initialized." );

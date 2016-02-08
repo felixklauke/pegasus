@@ -26,20 +26,35 @@ import java.util.logging.Logger;
  */
 public class Server {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
+    /**
+     * The port for the server that will be started. It has to be same the clients connect to.
+     */
     private static final int SERVER_PORT = 27816;
 
+    /**
+     * The basic Logger for the whole Server
+     */
     private static final Logger logger = Logger.getLogger( Server.class.getSimpleName() );
 
+    /**
+     * Singleton
+     */
     private static Server instance;
-    
+
     private final NettyServer nettyServer;
     private final ClientManager clientManager;
-    
+
+    /* ------------------------- [ Constructors ] ------------------------- */
+
     public Server() {
         instance = this;
         nettyServer = new NettyServer( SERVER_PORT );
         clientManager = new ClientManager();
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     public static Logger getLogger() {
         return logger;
@@ -60,4 +75,5 @@ public class Server {
     public ClientManager getClientManager() {
         return clientManager;
     }
+
 }

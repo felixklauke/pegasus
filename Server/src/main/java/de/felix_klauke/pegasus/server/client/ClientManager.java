@@ -26,12 +26,28 @@ import java.util.List;
  */
 public class ClientManager {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
+    /**
+     * All clients will be saved in this List. In future releases this will be replaced by a Guava Cache to add a
+     * TimeOut for authed clients.
+     */
     private List< Client > clients;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public ClientManager() {
         this.clients = Lists.newArrayList();
     }
 
+    /* ------------------------- [ Methods ] ------------------------- */
+
+    /**
+     * Get a Client by its username
+     *
+     * @param username the username of the client
+     * @return the client associated with the username. When no one is known this method will return null.
+     */
     public Client getClient( String username ) {
         for ( Client c : clients ) {
             if ( c.getUsername().equalsIgnoreCase( username ) ) return c;
@@ -39,6 +55,12 @@ public class ClientManager {
         return null;
     }
 
+    /**
+     * get a Client by its Netty Channel
+     *
+     * @param channel the channel that is used by the client in Netty
+     * @return the Client associated with the channel. When no one is known this method will return null.
+     */
     public Client getClient( Channel channel ) {
         for ( Client c : clients ) {
             if ( c.getChannel() == channel ) return c;
@@ -46,14 +68,30 @@ public class ClientManager {
         return null;
     }
 
+    /**
+     * This method will be used whenever a new client connects to the server and sends a valid PacketHandshake
+     *
+     * @param client the client to register
+     */
     public void registerClient( Client client ) {
         clients.add( client );
     }
 
+    /**
+     * This method will be used whenever a new client disconnects from the server.
+     *
+     * @param client the client to unregister
+     */
     public void unregisterClient( Client client ) {
         clients.remove( client );
     }
 
+    /**
+     * This method will authenticate a Client with the given password.
+     *
+     * @param client   the client to auth
+     * @param password the password to try to auth the client with
+     */
     public void authClient( Client client, String password ) {
         //TODO: Add authentication
         client.setAuthed( false );

@@ -24,6 +24,8 @@ import io.netty.buffer.ByteBuf;
  */
 public class ByteBufUtils {
 
+    /* ------------------------- [ Methods ] ------------------------- */
+
     public static void writeUTF8String( ByteBuf byteBuf, String string ) {
         byte[] bytes = string.getBytes( Charsets.UTF_8 );
         byteBuf.writeInt( bytes.length );

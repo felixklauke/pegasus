@@ -30,8 +30,19 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public class ServerPacketHandler extends ChannelHandlerAdapter {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
+    /**
+     * The handle that will process any packet
+     */
     private PacketHandler packetHandler;
+
+    /**
+     * The ClientManager that will get the related client when any data is received
+     */
     private ClientManager clientManager = Server.getInstance().getClientManager();
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public ServerPacketHandler() {
         this.packetHandler = new PacketHandler();
@@ -40,12 +51,31 @@ public class ServerPacketHandler extends ChannelHandlerAdapter {
         packetHandler.registerListener( new PacketHandshakeListener() );
     }
 
+    /* ------------------------- [ Methods ] ------------------------- */
+
+
+    /**
+     * This method will handle any incoming Packet. It will be passed to the packethandler.
+     *
+     * @param ctx the context of the ChannelHandler the packet is coming from
+     * @param msg the message as packet that was received
+     * @throws Exception
+     */
     @Override
     public void channelRead( ChannelHandlerContext ctx, Object msg ) throws Exception {
         Packet packet = ( Packet ) msg;
         packetHandler.handlePacket( ctx.pipeline().channel(), packet );
     }
 
+    /**
+     *
+     * The last instance to handle any Exception that occurs in the pipeline during processing any connection- or
+     * packetrelated data.
+     *
+     * @param ctx the context of the ChannelHandler the data is coming from
+     * @param cause the cause why the error occured
+     * @throws Exception
+     */
     @Override
     public void exceptionCaught( ChannelHandlerContext ctx, Throwable cause ) throws Exception {
         System.out.println( "Fehler: " + cause.getLocalizedMessage() );

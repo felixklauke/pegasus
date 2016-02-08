@@ -26,6 +26,8 @@ import io.netty.handler.codec.MessageToByteEncoder;
  */
 public class PacketEncoder extends MessageToByteEncoder< Packet > {
 
+    /* ------------------------- [ Methods ] ------------------------- */
+
     @Override
     protected void encode( ChannelHandlerContext channelHandlerContext, Packet packet, ByteBuf out ) throws Exception {
         out.writeInt( packet.getPacketType().getPacketID() );

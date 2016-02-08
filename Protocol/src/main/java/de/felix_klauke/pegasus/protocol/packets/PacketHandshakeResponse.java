@@ -24,7 +24,11 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketHandshakeResponse extends Packet {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private HandshakeResult result;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public PacketHandshakeResponse() {
         super( PacketType.HANDSHAKE_RESPONSE );
@@ -34,6 +38,8 @@ public class PacketHandshakeResponse extends Packet {
         super( PacketType.HANDSHAKE_RESPONSE );
         this.result = result;
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     public HandshakeResult getResult() {
         return result;
@@ -53,17 +59,27 @@ public class PacketHandshakeResponse extends Packet {
         result = HandshakeResult.getByCode( byteBuf.readInt() );
     }
 
+    /* ------------------------- [ Inner classes ] ------------------------- */
+
     public enum HandshakeResult {
+
+        /* ------------------------- [ Enumeration Objects ] ------------------------- */
 
         LOGIN_FAILED( 0 ),
         LOGIN_SUCCEEDED( 1 ),
         ERROR( 2 );
 
+        /* ------------------------- [ Fields ] ------------------------- */
+
         private final int code;
+
+        /* ------------------------- [ Constructors ] ------------------------- */
 
         HandshakeResult( int code ) {
             this.code = code;
         }
+
+        /* ------------------------- [ Methods ] ------------------------- */
 
         public static HandshakeResult getByCode( int code ) {
             for ( HandshakeResult result : values() ) {
@@ -75,6 +91,7 @@ public class PacketHandshakeResponse extends Packet {
         public int getCode() {
             return code;
         }
+
     }
 
 }

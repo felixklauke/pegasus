@@ -24,10 +24,13 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketTest extends Packet {
 
+    /* ------------------------- [ Methods ] ------------------------- */
+
     public PacketTest() {
         super( PacketType.TEST );
     }
 
+    /* ------------------------- [ Methods ] ------------------------- */
 
     @Override
     public void encode( ByteBuf byteBuf ) {

@@ -23,19 +23,27 @@ import de.felix_klauke.pegasus.protocol.Packet;
  */
 public enum PacketType {
 
+    /* ------------------------- [ Enumeration Entries ] ------------------------- */
+
     UNKNOWN( 0x00, null ),
     HANDSHAKE( 0x01, PacketHandshake.class ),
     HANDSHAKE_RESPONSE( 0x02, PacketHandshakeResponse.class ),
     MESSAGE( 0x03, PacketMessage.class ),
     TEST( 0x99, PacketTest.class );
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private int packetID;
     private Class< ? extends Packet > packetClass;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     PacketType( int packetID, Class< ? extends Packet > packetClass ) {
         this.packetID = packetID;
         this.packetClass = packetClass;
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     public static String getProtocolVersion() {
         return "1";

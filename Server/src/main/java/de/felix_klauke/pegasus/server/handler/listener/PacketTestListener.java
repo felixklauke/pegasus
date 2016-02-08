@@ -26,9 +26,13 @@ import de.felix_klauke.pegasus.server.client.Client;
  */
 public class PacketTestListener extends PacketListener< PacketTest > {
 
+    /* ------------------------- [ Constructors ] ------------------------- */
+
     public PacketTestListener() {
         super( PacketType.TEST.getPacketClass() );
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     @Override
     public void handlePacket( Client client, PacketTest packet ) {

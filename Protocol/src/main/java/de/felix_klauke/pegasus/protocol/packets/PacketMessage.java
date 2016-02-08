@@ -25,7 +25,11 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketMessage extends Packet {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private String message;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public PacketMessage() {
         super( PacketType.MESSAGE );
@@ -35,6 +39,8 @@ public class PacketMessage extends Packet {
         super( PacketType.MESSAGE );
         this.message = message;
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     @Override
     public void encode( ByteBuf byteBuf ) {
@@ -49,4 +55,5 @@ public class PacketMessage extends Packet {
     public String getMessage() {
         return message;
     }
+
 }

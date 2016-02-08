@@ -27,11 +27,21 @@ import de.felix_klauke.pegasus.server.client.ClientManager;
  */
 public class PacketHandshakeListener extends PacketListener< PacketHandshake > {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
+    /**
+     * The ClientManager that will get the related client when any data is received. It will try to authenticate a
+     * Client when it isnt authed yet.
+     */
     private ClientManager clientManager = Server.getInstance().getClientManager();
+
+    /* ------------------------- [ Constrcutors ] ------------------------- */
 
     public PacketHandshakeListener() {
         super( PacketHandshake.class );
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     @Override
     public void handlePacket( Client client, PacketHandshake packet ) {

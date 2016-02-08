@@ -24,9 +24,13 @@ import io.netty.channel.Channel;
  */
 public class PacketHandshakeResponseListener extends PacketListener< PacketHandshakeResponse > {
 
+    /* ------------------------- [ Constructors ] ------------------------- */
+
     public PacketHandshakeResponseListener() {
         super( PacketHandshakeResponse.class );
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     @Override
     public void handlePacket( Channel channel, PacketHandshakeResponse packet ) {

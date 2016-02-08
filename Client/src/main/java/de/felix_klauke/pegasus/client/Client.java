@@ -25,15 +25,21 @@ import java.util.logging.Logger;
  */
 public class Client {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private static final String SERVER_HOSTNAME = "localhost";
     private static final int SERVER_PORT = 27816;
 
     private static final Logger logger = Logger.getLogger( Client.class.getSimpleName() );
     private final NettyClient nettyServer;
 
+    /* ------------------------- [ Constructors ] ------------------------- */
+
     public Client() {
         nettyServer = new NettyClient( SERVER_HOSTNAME, SERVER_PORT );
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     public static Logger getLogger() {
         return logger;

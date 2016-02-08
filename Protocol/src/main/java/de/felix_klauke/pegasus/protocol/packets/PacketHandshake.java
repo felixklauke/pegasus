@@ -25,9 +25,13 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketHandshake extends Packet {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private String protocolVersion;
     private String username;
     private String encryptedPassword;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public PacketHandshake() {
         super( PacketType.HANDSHAKE );
@@ -39,6 +43,8 @@ public class PacketHandshake extends Packet {
         this.username = username;
         this.encryptedPassword = encryptedPassword;
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     @Override
     public void encode( ByteBuf byteBuf ) {

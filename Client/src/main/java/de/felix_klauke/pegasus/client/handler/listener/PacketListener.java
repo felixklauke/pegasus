@@ -24,11 +24,17 @@ import io.netty.channel.Channel;
  */
 public abstract class PacketListener< T extends Packet > {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private Class< ? extends Packet > clazz;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public PacketListener( Class< ? extends Packet > clazz ) {
         this.clazz = clazz;
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     public abstract void handlePacket( Channel channel, T packet );
 

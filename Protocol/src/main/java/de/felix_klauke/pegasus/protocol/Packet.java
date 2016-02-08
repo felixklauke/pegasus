@@ -24,11 +24,17 @@ import io.netty.buffer.ByteBuf;
  */
 public abstract class Packet {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private PacketType packetType;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public Packet( PacketType packetType ) {
         this.packetType = packetType;
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     public PacketType getPacketType() {
         return packetType;

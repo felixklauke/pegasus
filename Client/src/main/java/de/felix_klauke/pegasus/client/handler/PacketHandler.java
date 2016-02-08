@@ -28,11 +28,17 @@ import java.util.List;
  */
 public class PacketHandler {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private List< PacketListener > listeners;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public PacketHandler() {
         this.listeners = Lists.newArrayList();
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     public void registerListener( PacketListener packetListener ) {
         listeners.add( packetListener );

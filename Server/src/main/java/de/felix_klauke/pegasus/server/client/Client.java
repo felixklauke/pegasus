@@ -24,9 +24,13 @@ import io.netty.channel.Channel;
  */
 public class Client {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private String username;
     private Channel channel;
     private boolean authed;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public Client( String username, Channel channel ) {
         this.username = username;
@@ -34,10 +38,22 @@ public class Client {
         this.authed = false;
     }
 
+    /* ------------------------- [ Methods ] ------------------------- */
+
+    /**
+     * This Method will send the packet directly.
+     *
+     * @param packet the packet to send
+     */
     public void sendPacket( Packet packet ) {
         channel.writeAndFlush( packet );
     }
 
+    /**
+     * This Method will write all given packets in a buffer and will flush them after adding all.
+     *
+     * @param packets
+     */
     public void sendPackets( Packet... packets ) {
         for ( Packet packet : packets ) {
             channel.write( packet );

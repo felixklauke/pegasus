@@ -31,17 +31,42 @@ import java.util.List;
  */
 public class PacketHandler {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
+    /**
+     * All listeners that want to listen for any Packet the server receives will be saved in this List.
+     */
     private List< PacketListener > listeners;
+
+    /**
+     * The ClientManager that will get the related client when any data is received
+     */
     private ClientManager clientManager = Server.getInstance().getClientManager();
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public PacketHandler() {
         this.listeners = Lists.newArrayList();
     }
 
+    /* ------------------------- [ Methods ] ------------------------- */
+
+    /**
+     * Use this methods to register a new Listener.
+     *
+     * @param packetListener the PacketListener to register
+     */
     public void registerListener( PacketListener packetListener ) {
         listeners.add( packetListener );
     }
 
+    /**
+     * This Method will be called whenever the Server receives a new packet. You have to include the Channel the data
+     * came from and the packet that was received.
+     *
+     * @param channel the channel the datat came from
+     * @param packet  the packet the server received
+     */
     public void handlePacket( Channel channel, Packet packet ) {
         Client client = clientManager.getClient( channel );
         if ( client == null ) {

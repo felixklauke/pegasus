@@ -31,7 +31,11 @@ import io.netty.handler.codec.LengthFieldPrepender;
  */
 public class ClientChannelInitializer extends ChannelInitializer< SocketChannel > {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private Channel channel;
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     @Override
     protected void initChannel( SocketChannel socketChannel ) throws Exception {
@@ -50,4 +54,5 @@ public class ClientChannelInitializer extends ChannelInitializer< SocketChannel 
     public Channel getChannel() {
         return channel;
     }
+
 }

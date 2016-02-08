@@ -24,12 +24,29 @@ import de.felix_klauke.pegasus.server.client.Client;
  */
 public abstract class PacketListener< T extends Packet > {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
+    /**
+     * The workaround to save the class this listener should listen for. This is necessary, because it's way
+     * easier than trying to get it from the type parameter.
+     */
     private Class< ? extends Packet > clazz;
+
+    /* ------------------------- [ Constructors ] ------------------------- */
 
     public PacketListener( Class< ? extends Packet > clazz ) {
         this.clazz = clazz;
     }
 
+    /* ------------------------- [ Methods ] ------------------------- */
+
+    /**
+     * The abstract Method to implement in all subclasses. It will be called whenever a Packet of the specific type of
+     * this Listener has to be handled.
+     *
+     * @param client the client the packet came from
+     * @param packet the packet that was received
+     */
     public abstract void handlePacket( Client client, T packet );
 
     public Class< ? extends Packet > getClazz() {

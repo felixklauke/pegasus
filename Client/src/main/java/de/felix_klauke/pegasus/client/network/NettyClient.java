@@ -30,6 +30,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  */
 public class NettyClient {
 
+    /* ------------------------- [ Fields ] ------------------------- */
+
     private final String serverHostname;
     private final int serverPort;
 
@@ -37,11 +39,15 @@ public class NettyClient {
 
     private ClientChannelInitializer channelInitializer = new ClientChannelInitializer();
 
+    /* ------------------------- [ Constructors ] ------------------------- */
+
     public NettyClient( String serverHostname, int serverPort ) {
         this.serverHostname = serverHostname;
         this.serverPort = serverPort;
         this.bootstrap = new Bootstrap();
     }
+
+    /* ------------------------- [ Methods ] ------------------------- */
 
     public void start() {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
