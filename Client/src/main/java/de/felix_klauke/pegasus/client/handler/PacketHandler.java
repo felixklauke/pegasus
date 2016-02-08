@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package de.felix_klauke.pegasus.server.handler;
+package de.felix_klauke.pegasus.client.handler;
 
 import com.google.common.collect.Lists;
+import de.felix_klauke.pegasus.client.handler.listener.PacketListener;
 import de.felix_klauke.pegasus.protocol.Packet;
-import de.felix_klauke.pegasus.server.Server;
-import de.felix_klauke.pegasus.server.client.Client;
-import de.felix_klauke.pegasus.server.client.ClientManager;
-import de.felix_klauke.pegasus.server.handler.listener.PacketListener;
 import io.netty.channel.Channel;
 
 import java.util.List;
 
 /**
- * Created by Felix Klauke for project Pegasus on 06.02.2016.
+ * Created by Felix Klauke for project Pegasus on 08.02.2016.
  */
 public class PacketHandler {
 
     private List< PacketListener > listeners;
-    private ClientManager clientManager = Server.getInstance().getClientManager();
 
     public PacketHandler() {
         this.listeners = Lists.newArrayList();
@@ -43,14 +39,9 @@ public class PacketHandler {
     }
 
     public void handlePacket( Channel channel, Packet packet ) {
-        Client client = clientManager.getClient( channel );
-        if ( client == null ) {
-            client = new Client( "", channel );
-            clientManager.registerClient( client );
-        }
         for ( final PacketListener listener : listeners ) {
             if ( listener.getClazz() == packet.getPacketType().getPacketClass() ) {
-                listener.handlePacket( client, packet );
+                listener.handlePacket( channel, packet );
             }
         }
     }

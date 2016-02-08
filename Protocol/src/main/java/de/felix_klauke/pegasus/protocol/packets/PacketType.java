@@ -26,6 +26,7 @@ public enum PacketType {
     UNKNOWN( 0x00, null ),
     HANDSHAKE( 0x01, PacketHandshake.class ),
     HANDSHAKE_RESPONSE( 0x02, PacketHandshakeResponse.class ),
+    MESSAGE( 0x03, PacketMessage.class ),
     TEST( 0x99, PacketTest.class );
 
     private int packetID;

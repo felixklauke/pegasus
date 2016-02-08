@@ -16,6 +16,8 @@
 
 package de.felix_klauke.pegasus.client.handler;
 
+import de.felix_klauke.pegasus.client.handler.listener.PacketHandshakeResponseListener;
+import de.felix_klauke.pegasus.protocol.Packet;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -24,8 +26,16 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public class ClientPacketHandler extends ChannelHandlerAdapter {
 
+    private PacketHandler packetHandler;
+
+    public ClientPacketHandler() {
+        packetHandler = new PacketHandler();
+        packetHandler.registerListener( new PacketHandshakeResponseListener() );
+    }
+
     @Override
     public void channelRead( ChannelHandlerContext ctx, Object msg ) throws Exception {
-
+        packetHandler.handlePacket( ctx.pipeline().channel(), ( Packet ) msg );
     }
+
 }

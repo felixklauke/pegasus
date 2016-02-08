@@ -16,6 +16,7 @@
 
 package de.felix_klauke.pegasus.client.network;
 
+import de.felix_klauke.pegasus.protocol.Packet;
 import de.felix_klauke.pegasus.protocol.packets.PacketHandshake;
 import de.felix_klauke.pegasus.protocol.packets.PacketType;
 import io.netty.bootstrap.Bootstrap;
@@ -60,6 +61,10 @@ public class NettyClient {
         } catch ( InterruptedException e ) {
             e.printStackTrace();
         }
+    }
+
+    public void sendPacket( Packet packet ) {
+        channelInitializer.getChannel().writeAndFlush( packet );
     }
 
 }

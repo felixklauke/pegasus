@@ -56,6 +56,11 @@ public class ClientManager {
 
     public void authClient( Client client, String password ) {
         //TODO: Add authentication
-        client.setAuthed( true );
+        client.setAuthed( false );
     }
+
+    public List< Client > getClients() {
+        return clients;
+    }
+
 }
