@@ -14,33 +14,31 @@
  * limitations under the License.
  */
 
-package de.felix_klauke.pegasus.server;
-
-import de.felix_klauke.pegasus.server.network.NettyServer;
-
-import java.util.logging.Logger;
+package de.felix_klauke.pegasus.protocol.packets.wrapper;
 
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
-public class Server {
+public enum HandshakeResult {
 
-    //27816
-    private Logger logger;
-    private NettyServer nettyServer;
+    SUCCESS(0),
+    FAILURE(1),
+    ERROR(2);
 
-    public Server() {
-        logger = Logger.getLogger(Server.class.getSimpleName());
+    private final int statusID;
 
-        nettyServer = new NettyServer(logger);
+    HandshakeResult(int statusID) {
+        this.statusID = statusID;
     }
 
-    public static void main( String[] args ) {
-        new Server().start();
+    public static HandshakeResult lookup(int statusID) {
+        for (HandshakeResult result : values()) {
+            if (result.getStatusID() == statusID) return result;
+        }
+        return null;
     }
 
-    public void start() {
-        nettyServer.start();
+    public int getStatusID() {
+        return statusID;
     }
-
 }

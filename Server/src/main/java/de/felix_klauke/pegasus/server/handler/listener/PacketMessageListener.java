@@ -17,36 +17,29 @@
 package de.felix_klauke.pegasus.server.handler.listener;
 
 import de.felix_klauke.pegasus.protocol.packets.PacketMessage;
-import de.felix_klauke.pegasus.server.Server;
-import de.felix_klauke.pegasus.server.client.Client;
-import de.felix_klauke.pegasus.server.client.ClientManager;
+import de.felix_klauke.pegasus.server.handler.PacketListener;
+import de.felix_klauke.pegasus.server.user.User;
+import de.felix_klauke.pegasus.server.user.UserManager;
+import io.netty.channel.Channel;
 
 /**
- * Created by Felix Klauke for project Pegasus on 08.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
-public class PacketMessageListener extends PacketListener< PacketMessage > {
+public class PacketMessageListener implements PacketListener<PacketMessage> {
 
-    /* ------------------------- [ Fields ] ------------------------- */
+    private UserManager userManager;
 
-    /**
-     * The ClientManager that will get the related client when any data is received
-     */
-    private ClientManager clientManager = Server.getInstance().getClientManager();
-
-    /* ------------------------- [ Constructors ] ------------------------- */
-
-    public PacketMessageListener() {
-        super( PacketMessage.class );
+    public PacketMessageListener(UserManager userManager) {
+        this.userManager = userManager;
     }
 
-    /* ------------------------- [ Methods ] ------------------------- */
-
-
-    @Override
-    public void handlePacket( Client client, PacketMessage packet ) {
-        for ( Client c : clientManager.getClients() ) {
-            if ( c == client ) continue;
-            c.sendPacket( packet );
+    public void handlePacket(Channel channel, PacketMessage packet) {
+        packet.setAuthor(userManager.getUser(channel).getUsername());
+        for (User user : userManager.getUsers()) {
+            if (user.getChannel() == channel) continue;
+            channel.writeAndFlush(packet);
         }
+        System.out.println("BROADCAAAAAAAAAAAAAAAST!");
     }
+
 }

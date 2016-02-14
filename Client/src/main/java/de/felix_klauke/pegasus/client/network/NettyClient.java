@@ -16,61 +16,69 @@
 
 package de.felix_klauke.pegasus.client.network;
 
-import de.felix_klauke.pegasus.protocol.Packet;
-import de.felix_klauke.pegasus.protocol.packets.PacketHandshake;
-import de.felix_klauke.pegasus.protocol.packets.PacketType;
+import de.felix_klauke.pegasus.client.handler.PacketHandler;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import java.util.logging.Logger;
+
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
 public class NettyClient {
 
-    /* ------------------------- [ Fields ] ------------------------- */
-
-    private final String serverHostname;
-    private final int serverPort;
-
+    private Logger logger;
     private Bootstrap bootstrap;
 
-    private ClientChannelInitializer channelInitializer = new ClientChannelInitializer();
+    private NettyClientChannelHandler channelInitializer;
+    private Channel channel;
 
-    /* ------------------------- [ Constructors ] ------------------------- */
+    private PacketHandler packetHandler;
 
-    public NettyClient( String serverHostname, int serverPort ) {
-        this.serverHostname = serverHostname;
-        this.serverPort = serverPort;
+    public NettyClient(Logger logger) {
+        this.logger = logger;
         this.bootstrap = new Bootstrap();
+        this.packetHandler = new PacketHandler(logger);
+        this.channelInitializer = new NettyClientChannelHandler(logger, packetHandler);
     }
 
-    /* ------------------------- [ Methods ] ------------------------- */
-
     public void start() {
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        logger.info("Starting netty Client...");
+
+        bootstrap.channel(NioSocketChannel.class);
+        bootstrap.group(new NioEventLoopGroup());
+        bootstrap.handler(channelInitializer);
+        bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
+
+        logger.info("NettyClient is configured. Client will be connect now...");
 
         try {
-            ChannelFuture future = bootstrap
-                    .group( workerGroup )
-                    .channel( NioSocketChannel.class )
-                    .handler( channelInitializer )
-                    .connect( serverHostname, serverPort ).sync();
 
-            future.sync().channel().writeAndFlush( new PacketHandshake( PacketType.getProtocolVersion(), "Hey", "Hey"
-            ) );
+            ChannelFuture future = bootstrap.connect("localhost", 27816).sync();
+            channel = channelInitializer.getChannel();
+
+            logger.info("NettyClient is connected. Blocking Thread with the Client now...");
 
             future.sync().channel().closeFuture().sync();
-
         } catch ( InterruptedException e ) {
             e.printStackTrace();
         }
     }
 
-    public void sendPacket( Packet packet ) {
-        channelInitializer.getChannel().writeAndFlush( packet );
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public PacketHandler getPacketHandler() {
+        return packetHandler;
+    }
+
+    public void send(Object object) {
+        getChannel().writeAndFlush(object);
     }
 
 }

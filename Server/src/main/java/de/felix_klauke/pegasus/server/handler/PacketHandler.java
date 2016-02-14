@@ -16,68 +16,84 @@
 
 package de.felix_klauke.pegasus.server.handler;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import de.felix_klauke.pegasus.protocol.Packet;
-import de.felix_klauke.pegasus.server.Server;
-import de.felix_klauke.pegasus.server.client.Client;
-import de.felix_klauke.pegasus.server.client.ClientManager;
-import de.felix_klauke.pegasus.server.handler.listener.PacketListener;
+import de.felix_klauke.pegasus.protocol.packets.PacketHandshake;
+import de.felix_klauke.pegasus.protocol.packets.PacketHandshakeResponse;
+import de.felix_klauke.pegasus.protocol.packets.PacketMessage;
+import de.felix_klauke.pegasus.protocol.packets.wrapper.HandshakeResult;
+import de.felix_klauke.pegasus.server.handler.listener.PacketMessageListener;
+import de.felix_klauke.pegasus.server.user.User;
+import de.felix_klauke.pegasus.server.user.UserManager;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerAdapter;
+import io.netty.channel.ChannelHandlerContext;
 
-import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
- * Created by Felix Klauke for project Pegasus on 06.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
-public class PacketHandler {
+@ChannelHandler.Sharable
+public class PacketHandler extends ChannelHandlerAdapter {
 
-    /* ------------------------- [ Fields ] ------------------------- */
+    private final Logger logger;
+    private Map<PacketListener, Class> listeners;
+    private UserManager userManager;
 
-    /**
-     * All listeners that want to listen for any Packet the server receives will be saved in this List.
-     */
-    private List< PacketListener > listeners;
+    public PacketHandler(Logger logger) {
+        this.logger = logger;
+        this.listeners = Maps.newConcurrentMap();
+        this.userManager = new UserManager();
 
-    /**
-     * The ClientManager that will get the related client when any data is received
-     */
-    private ClientManager clientManager = Server.getInstance().getClientManager();
-
-    /* ------------------------- [ Constructors ] ------------------------- */
-
-    public PacketHandler() {
-        this.listeners = Lists.newArrayList();
+        registerListener(new PacketMessageListener(userManager), PacketMessage.class);
     }
 
-    /* ------------------------- [ Methods ] ------------------------- */
-
-    /**
-     * Use this methods to register a new Listener.
-     *
-     * @param packetListener the PacketListener to register
-     */
-    public void registerListener( PacketListener packetListener ) {
-        listeners.add( packetListener );
+    public void registerListener(PacketListener listener, Class<? extends Packet> clazz) {
+        listeners.put(listener, clazz);
     }
 
-    /**
-     * This Method will be called whenever the Server receives a new packet. You have to include the Channel the data
-     * came from and the packet that was received.
-     *
-     * @param channel the channel the datat came from
-     * @param packet  the packet the server received
-     */
-    public void handlePacket( Channel channel, Packet packet ) {
-        Client client = clientManager.getClient( channel );
-        if ( client == null ) {
-            client = new Client( "", channel );
-            clientManager.registerClient( client );
+    public Map<PacketListener, Class> getListeners() {
+        return listeners;
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
+        User user = userManager.getUser(ctx.pipeline().channel());
+        if (user == null) {
+            System.out.println(msg.getClass());
+            if (msg instanceof PacketHandshake) {
+                PacketHandshake packetHandshake = (PacketHandshake) msg;
+                boolean success = userManager.authUser(packetHandshake.getUsername(), packetHandshake.getPassword());
+
+                PacketHandshakeResponse response = new PacketHandshakeResponse();
+                response.setResult(success ? HandshakeResult.SUCCESS : HandshakeResult.FAILURE);
+                ctx.pipeline().channel().writeAndFlush(response);
+                return;
+            }
+            ctx.pipeline().channel().close();
+            return;
         }
-        for ( final PacketListener listener : listeners ) {
-            if ( listener.getClazz() == packet.getPacketType().getPacketClass() ) {
-                listener.handlePacket( client, packet );
+
+        if (msg instanceof Packet) {
+            handlePacket(ctx.pipeline().channel(), (Packet) msg);
+        }
+    }
+
+    public void handlePacket(Channel channel, Packet packet) {
+        logger.info("Handling a new Packet: " + packet.getPacketType().name());
+        for (Map.Entry<PacketListener, Class> entry : listeners.entrySet()) {
+            if (entry.getValue() == packet.getClass()) {
+                entry.getKey().handlePacket(channel, packet);
             }
         }
     }
 
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        logger.warning("An error occured in the server packet handler: " + cause.getLocalizedMessage());
+    }
 }

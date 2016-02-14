@@ -16,51 +16,53 @@
 
 package de.felix_klauke.pegasus.server.network;
 
+import de.felix_klauke.pegasus.server.handler.PacketHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
+import java.util.logging.Logger;
+
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
 public class NettyServer {
 
-    /* ------------------------- [ Fields ] ------------------------- */
+    private Logger logger;
+    private ServerBootstrap serverBootstrap;
 
-    private final int serverPort;
-    private final ServerBootstrap bootstrap;
+    private NettyServerChannelHandler channelInitializer;
+    private PacketHandler packetHandler;
 
-    /* ------------------------- [ Constructors ] ------------------------- */
-
-    public NettyServer( int serverPort ) {
-        this.serverPort = serverPort;
-        this.bootstrap = new ServerBootstrap();
+    public NettyServer(Logger logger) {
+        this.logger = logger;
+        this.serverBootstrap = new ServerBootstrap();
+        this.packetHandler = new PacketHandler(logger);
+        this.channelInitializer = new NettyServerChannelHandler(logger, packetHandler);
     }
 
-    /* ------------------------- [ Methods ] ------------------------- */
-
-    /**
-     * Start the basic nettyserver
-     */
     public void start() {
-        NioEventLoopGroup bossGroup = new NioEventLoopGroup();
-        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+        logger.info("Starting Netty Server...");
+
+        serverBootstrap.channel(NioServerSocketChannel.class);
+        serverBootstrap.group(new NioEventLoopGroup(), new NioEventLoopGroup());
+        serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
+        serverBootstrap.childHandler(channelInitializer);
+
+        logger.info("NettyServer is configured. Server will be binded now...");
+
+        ChannelFuture future = serverBootstrap.bind(27816);
+
+        logger.info("Nettyserver is bound. Blocking Thread with the Server now...");
 
         try {
-            ChannelFuture future = bootstrap
-                    .group( bossGroup, workerGroup )
-                    .channel( NioServerSocketChannel.class )
-                    .option( ChannelOption.SO_BACKLOG, 128 )
-                    .childOption( ChannelOption.SO_KEEPALIVE, true )
-                    .childHandler( new ServerChannelInitializer() )
-                    .bind( serverPort );
-
             future.sync().channel().closeFuture().sync();
         } catch ( InterruptedException e ) {
             e.printStackTrace();
         }
     }
+
 
 }

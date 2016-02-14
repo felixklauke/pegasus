@@ -17,40 +17,39 @@
 package de.felix_klauke.pegasus.client;
 
 import de.felix_klauke.pegasus.client.network.NettyClient;
+import de.felix_klauke.pegasus.protocol.packets.PacketMessage;
 
 import java.util.logging.Logger;
 
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
 public class Client {
 
-    /* ------------------------- [ Fields ] ------------------------- */
-
-    private static final String SERVER_HOSTNAME = "localhost";
-    private static final int SERVER_PORT = 27816;
-
-    private static final Logger logger = Logger.getLogger( Client.class.getSimpleName() );
-    private final NettyClient nettyServer;
-
-    /* ------------------------- [ Constructors ] ------------------------- */
+    private Logger logger;
+    private NettyClient nettyClient;
 
     public Client() {
-        nettyServer = new NettyClient( SERVER_HOSTNAME, SERVER_PORT );
-    }
-
-    /* ------------------------- [ Methods ] ------------------------- */
-
-    public static Logger getLogger() {
-        return logger;
+        logger = Logger.getLogger(Client.class.getSimpleName());
+        nettyClient = new NettyClient(logger);
     }
 
     public static void main( String[] args ) {
-        new Client().getNettyClient().start();
+        new Client().start();
     }
 
-    public NettyClient getNettyClient() {
-        return nettyServer;
+    public void start() {
+        new Thread(new Runnable() {
+            public void run() {
+                nettyClient.start();
+            }
+        }).start();
+        try {
+            Thread.sleep(10000);
+            nettyClient.send(new PacketMessage("Hey"));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

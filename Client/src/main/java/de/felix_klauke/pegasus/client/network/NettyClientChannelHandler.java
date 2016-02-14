@@ -16,39 +16,43 @@
 
 package de.felix_klauke.pegasus.client.network;
 
-import de.felix_klauke.pegasus.client.Client;
-import de.felix_klauke.pegasus.client.handler.ClientPacketHandler;
+import de.felix_klauke.pegasus.client.handler.PacketHandler;
 import de.felix_klauke.pegasus.protocol.decoder.PacketDecoder;
 import de.felix_klauke.pegasus.protocol.encoder.PacketEncoder;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.LengthFieldPrepender;
+
+import java.util.logging.Logger;
 
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
-public class ClientChannelInitializer extends ChannelInitializer< SocketChannel > {
+public class NettyClientChannelHandler extends ChannelInitializer<SocketChannel> {
 
-    /* ------------------------- [ Fields ] ------------------------- */
-
+    private PacketHandler packetHandler;
+    private Logger logger;
     private Channel channel;
 
-    /* ------------------------- [ Methods ] ------------------------- */
+    public NettyClientChannelHandler(Logger logger, PacketHandler packetHandler) {
+        this.logger = logger;
+        this.packetHandler = packetHandler;
+    }
 
     @Override
-    protected void initChannel( SocketChannel socketChannel ) throws Exception {
-        Client.getLogger().info( "New Channel has been initialized." );
+    protected void initChannel(SocketChannel socketChannel) throws Exception {
+        logger.info("A new Channel has been initialized.\n" +
+                "Channel: " + socketChannel.id().asShortText());
+        logger.info("Preparing a new Channelpipeline.");
 
         socketChannel.pipeline().addLast(
-                new LengthFieldPrepender( 4 ),
                 new PacketEncoder(),
-                new LengthFieldBasedFrameDecoder( 1024, 0, 4, 0, 4 ),
                 new PacketDecoder(),
-                new ClientPacketHandler() );
-
+                packetHandler
+        );
         channel = socketChannel.pipeline().channel();
+
+        logger.info("Channelpipeline has been created.");
     }
 
     public Channel getChannel() {

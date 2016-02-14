@@ -17,81 +17,42 @@
 package de.felix_klauke.pegasus.protocol.packets;
 
 import de.felix_klauke.pegasus.protocol.Packet;
+import de.felix_klauke.pegasus.protocol.PacketType;
+import de.felix_klauke.pegasus.protocol.packets.wrapper.HandshakeResult;
 import io.netty.buffer.ByteBuf;
 
 /**
- * Created by Felix Klauke for project Pegasus on 07.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
 public class PacketHandshakeResponse extends Packet {
 
-    /* ------------------------- [ Fields ] ------------------------- */
-
     private HandshakeResult result;
 
-    /* ------------------------- [ Constructors ] ------------------------- */
-
     public PacketHandshakeResponse() {
-        super( PacketType.HANDSHAKE_RESPONSE );
+        super(PacketType.HANDSHAKE_RESULT);
     }
 
-    public PacketHandshakeResponse( HandshakeResult result ) {
-        super( PacketType.HANDSHAKE_RESPONSE );
+    public PacketHandshakeResponse(HandshakeResult result) {
+        super(PacketType.HANDSHAKE_RESULT);
         this.result = result;
     }
 
-    /* ------------------------- [ Methods ] ------------------------- */
+    @Override
+    public void encode(ByteBuf byteBuf) {
+        byteBuf.writeInt(result.getStatusID());
+    }
+
+    @Override
+    public void decode(ByteBuf byteBuf) {
+        result = HandshakeResult.lookup(byteBuf.readInt());
+    }
 
     public HandshakeResult getResult() {
         return result;
     }
 
-    public void setResult( HandshakeResult result ) {
+    public void setResult(HandshakeResult result) {
         this.result = result;
-    }
-
-    @Override
-    public void encode( ByteBuf byteBuf ) {
-        byteBuf.writeInt( result.getCode() );
-    }
-
-    @Override
-    public void decode( ByteBuf byteBuf ) {
-        result = HandshakeResult.getByCode( byteBuf.readInt() );
-    }
-
-    /* ------------------------- [ Inner classes ] ------------------------- */
-
-    public enum HandshakeResult {
-
-        /* ------------------------- [ Enumeration Objects ] ------------------------- */
-
-        LOGIN_FAILED( 0 ),
-        LOGIN_SUCCEEDED( 1 ),
-        ERROR( 2 );
-
-        /* ------------------------- [ Fields ] ------------------------- */
-
-        private final int code;
-
-        /* ------------------------- [ Constructors ] ------------------------- */
-
-        HandshakeResult( int code ) {
-            this.code = code;
-        }
-
-        /* ------------------------- [ Methods ] ------------------------- */
-
-        public static HandshakeResult getByCode( int code ) {
-            for ( HandshakeResult result : values() ) {
-                if ( result.getCode() == code ) return result;
-            }
-            return HandshakeResult.ERROR;
-        }
-
-        public int getCode() {
-            return code;
-        }
-
     }
 
 }

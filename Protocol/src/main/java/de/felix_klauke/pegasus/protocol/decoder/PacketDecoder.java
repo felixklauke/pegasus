@@ -17,7 +17,7 @@
 package de.felix_klauke.pegasus.protocol.decoder;
 
 import de.felix_klauke.pegasus.protocol.Packet;
-import de.felix_klauke.pegasus.protocol.packets.PacketType;
+import de.felix_klauke.pegasus.protocol.PacketType;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.EmptyByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -27,23 +27,23 @@ import io.netty.handler.codec.UnsupportedMessageTypeException;
 import java.util.List;
 
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
 public class PacketDecoder extends ByteToMessageDecoder {
 
-    /* ------------------------- [ Methods ] ------------------------- */
-
     @Override
-    protected void decode( ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List< Object > list ) throws Exception {
-        if ( byteBuf instanceof EmptyByteBuf ) return;
-        PacketType packetType = PacketType.getTypeByID( byteBuf.readInt() );
+    protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
+        if (byteBuf instanceof EmptyByteBuf) return;
+        int packetID = byteBuf.readInt();
 
-        if ( packetType == PacketType.UNKNOWN ) {
+        if (packetID == -1) {
             throw new UnsupportedMessageTypeException();
         }
-        Packet packet = packetType.getPacketClass().newInstance();
-        packet.decode( byteBuf );
-        list.add( packet );
+        Packet packet = PacketType.lookup(packetID);
+        if (packet != null) {
+            packet.decode(byteBuf);
+            list.add(packet);
+        }
     }
 
 }

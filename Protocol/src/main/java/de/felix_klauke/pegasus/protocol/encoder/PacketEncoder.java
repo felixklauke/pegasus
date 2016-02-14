@@ -22,16 +22,14 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
-public class PacketEncoder extends MessageToByteEncoder< Packet > {
-
-    /* ------------------------- [ Methods ] ------------------------- */
+public class PacketEncoder extends MessageToByteEncoder<Packet> {
 
     @Override
-    protected void encode( ChannelHandlerContext channelHandlerContext, Packet packet, ByteBuf out ) throws Exception {
-        out.writeInt( packet.getPacketType().getPacketID() );
-        packet.encode( out );
+    protected void encode(ChannelHandlerContext channelHandlerContext, Packet packet, ByteBuf byteBuf) throws Exception {
+        byteBuf.writeInt(packet.getPacketType().getPacketID());
+        packet.encode(byteBuf);
     }
 
 }

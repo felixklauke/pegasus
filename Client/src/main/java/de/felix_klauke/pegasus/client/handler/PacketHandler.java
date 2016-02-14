@@ -16,40 +16,54 @@
 
 package de.felix_klauke.pegasus.client.handler;
 
-import com.google.common.collect.Lists;
-import de.felix_klauke.pegasus.client.handler.listener.PacketListener;
+import com.google.common.collect.Maps;
 import de.felix_klauke.pegasus.protocol.Packet;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerAdapter;
+import io.netty.channel.ChannelHandlerContext;
 
-import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
- * Created by Felix Klauke for project Pegasus on 08.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
-public class PacketHandler {
+public class PacketHandler extends ChannelHandlerAdapter {
 
-    /* ------------------------- [ Fields ] ------------------------- */
+    private final Logger logger;
+    Map<PacketListener, Class> listeners;
 
-    private List< PacketListener > listeners;
-
-    /* ------------------------- [ Constructors ] ------------------------- */
-
-    public PacketHandler() {
-        this.listeners = Lists.newArrayList();
+    public PacketHandler(Logger logger) {
+        this.logger = logger;
+        this.listeners = Maps.newConcurrentMap();
     }
 
-    /* ------------------------- [ Methods ] ------------------------- */
-
-    public void registerListener( PacketListener packetListener ) {
-        listeners.add( packetListener );
+    public void registerListener(PacketListener listener, Class<? extends Packet> clazz) {
+        listeners.put(listener, clazz);
     }
 
-    public void handlePacket( Channel channel, Packet packet ) {
-        for ( final PacketListener listener : listeners ) {
-            if ( listener.getClazz() == packet.getPacketType().getPacketClass() ) {
-                listener.handlePacket( channel, packet );
+    public Map<PacketListener, Class> getListeners() {
+        return listeners;
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if (msg instanceof Packet) {
+            handlePacket(ctx.pipeline().channel(), (Packet) msg);
+        }
+    }
+
+    public void handlePacket(Channel channel, Packet packet) {
+        logger.info("Handling a new Packet: " + packet.getPacketType().name());
+        for (Map.Entry<PacketListener, Class> entry : listeners.entrySet()) {
+            if (entry.getValue() == packet.getClass()) {
+                entry.getKey().handlePacket(channel, packet);
             }
         }
     }
 
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        logger.warning("An error occured in the client packet handler: " + cause.getLocalizedMessage());
+    }
 }

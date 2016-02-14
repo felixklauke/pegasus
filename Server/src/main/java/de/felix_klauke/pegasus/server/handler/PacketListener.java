@@ -14,31 +14,15 @@
  * limitations under the License.
  */
 
-package de.felix_klauke.pegasus.protocol.packets;
+package de.felix_klauke.pegasus.server.handler;
 
-import de.felix_klauke.pegasus.protocol.Packet;
-import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
-public class PacketTest extends Packet {
+public interface PacketListener<T> {
 
-    /* ------------------------- [ Methods ] ------------------------- */
+    void handlePacket(Channel channel, T packet);
 
-    public PacketTest() {
-        super( PacketType.TEST );
-    }
-
-    /* ------------------------- [ Methods ] ------------------------- */
-
-    @Override
-    public void encode( ByteBuf byteBuf ) {
-
-    }
-
-    @Override
-    public void decode( ByteBuf byteBuf ) {
-
-    }
 }

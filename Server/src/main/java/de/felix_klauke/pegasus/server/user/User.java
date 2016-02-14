@@ -14,33 +14,33 @@
  * limitations under the License.
  */
 
-package de.felix_klauke.pegasus.client.handler.listener;
+package de.felix_klauke.pegasus.server.user;
 
 import de.felix_klauke.pegasus.protocol.Packet;
 import io.netty.channel.Channel;
 
 /**
- * Created by Felix Klauke for project Pegasus on 08.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
-public abstract class PacketListener< T extends Packet > {
+public class User {
 
-    /* ------------------------- [ Fields ] ------------------------- */
+    private Channel channel;
+    private String username;
 
-    private Class< ? extends Packet > clazz;
-
-    /* ------------------------- [ Constructors ] ------------------------- */
-
-    public PacketListener( Class< ? extends Packet > clazz ) {
-        this.clazz = clazz;
+    public User(Channel channel, String username) {
+        this.channel = channel;
+        this.username = username;
     }
 
-    /* ------------------------- [ Methods ] ------------------------- */
-
-    public abstract void handlePacket( Channel channel, T packet );
-
-    public Class< ? extends Packet > getClazz() {
-        return clazz;
+    public Channel getChannel() {
+        return channel;
     }
 
+    public String getUsername() {
+        return username;
+    }
 
+    public void sendPacket(Packet packet) {
+        channel.writeAndFlush(packet);
+    }
 }

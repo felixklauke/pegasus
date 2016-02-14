@@ -17,57 +17,67 @@
 package de.felix_klauke.pegasus.protocol.packets;
 
 import de.felix_klauke.pegasus.protocol.Packet;
+import de.felix_klauke.pegasus.protocol.PacketType;
 import de.felix_klauke.pegasus.protocol.util.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 
 /**
- * Created by Felix Klauke for project Pegasus on 07.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
 public class PacketHandshake extends Packet {
 
-    /* ------------------------- [ Fields ] ------------------------- */
-
-    private String protocolVersion;
     private String username;
-    private String encryptedPassword;
-
-    /* ------------------------- [ Constructors ] ------------------------- */
+    private String password;
+    private String protocolVersion;
 
     public PacketHandshake() {
-        super( PacketType.HANDSHAKE );
+        super(PacketType.HANDSHAKE);
     }
 
-    public PacketHandshake( String protocolVersion, String username, String encryptedPassword ) {
+    public PacketHandshake(String username, String password, String protocolVersion) {
         super( PacketType.HANDSHAKE );
-        this.protocolVersion = protocolVersion;
         this.username = username;
-        this.encryptedPassword = encryptedPassword;
+        this.password = password;
+        this.protocolVersion = protocolVersion;
     }
-
-    /* ------------------------- [ Methods ] ------------------------- */
 
     @Override
     public void encode( ByteBuf byteBuf ) {
-        ByteBufUtils.writeUTF8Strings( byteBuf, protocolVersion, username, encryptedPassword );
+        ByteBufUtils.writeUTF8String(byteBuf, username);
+        ByteBufUtils.writeUTF8String(byteBuf, password);
+        ByteBufUtils.writeUTF8String(byteBuf, protocolVersion);
     }
 
     @Override
     public void decode( ByteBuf byteBuf ) {
-        protocolVersion = ByteBufUtils.readUTF8String( byteBuf );
         username = ByteBufUtils.readUTF8String( byteBuf );
-        encryptedPassword = ByteBufUtils.readUTF8String( byteBuf );
+        password = ByteBufUtils.readUTF8String(byteBuf);
+        protocolVersion = ByteBufUtils.readUTF8String(byteBuf);
     }
 
-    public String getEncryptedPassword() {
-        return encryptedPassword;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getProtocolVersion() {
         return protocolVersion;
     }
 
-    public String getUsername() {
-        return username;
+    public void setProtocolVersion(String protocolVersion) {
+        this.protocolVersion = protocolVersion;
     }
 
 }

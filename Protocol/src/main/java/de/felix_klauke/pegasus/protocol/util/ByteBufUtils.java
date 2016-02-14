@@ -20,11 +20,9 @@ import com.google.common.base.Charsets;
 import io.netty.buffer.ByteBuf;
 
 /**
- * Created by Felix Klauke for project Pegasus on 07.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
 public class ByteBufUtils {
-
-    /* ------------------------- [ Methods ] ------------------------- */
 
     public static void writeUTF8String( ByteBuf byteBuf, String string ) {
         byte[] bytes = string.getBytes( Charsets.UTF_8 );

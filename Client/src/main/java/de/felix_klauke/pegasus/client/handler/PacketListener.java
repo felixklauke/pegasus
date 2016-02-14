@@ -14,33 +14,15 @@
  * limitations under the License.
  */
 
-package de.felix_klauke.pegasus.server;
+package de.felix_klauke.pegasus.client.handler;
 
-import de.felix_klauke.pegasus.server.network.NettyServer;
-
-import java.util.logging.Logger;
+import io.netty.channel.Channel;
 
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
-public class Server {
+public interface PacketListener<T> {
 
-    //27816
-    private Logger logger;
-    private NettyServer nettyServer;
-
-    public Server() {
-        logger = Logger.getLogger(Server.class.getSimpleName());
-
-        nettyServer = new NettyServer(logger);
-    }
-
-    public static void main( String[] args ) {
-        new Server().start();
-    }
-
-    public void start() {
-        nettyServer.start();
-    }
+    void handlePacket(Channel channel, T packet);
 
 }

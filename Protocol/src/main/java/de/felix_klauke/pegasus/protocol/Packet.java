@@ -16,25 +16,18 @@
 
 package de.felix_klauke.pegasus.protocol;
 
-import de.felix_klauke.pegasus.protocol.packets.PacketType;
 import io.netty.buffer.ByteBuf;
 
 /**
- * Created by Felix Klauke for project Pegasus on 05.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
 public abstract class Packet {
 
-    /* ------------------------- [ Fields ] ------------------------- */
-
     private PacketType packetType;
-
-    /* ------------------------- [ Constructors ] ------------------------- */
 
     public Packet( PacketType packetType ) {
         this.packetType = packetType;
     }
-
-    /* ------------------------- [ Methods ] ------------------------- */
 
     public PacketType getPacketType() {
         return packetType;
@@ -42,6 +35,6 @@ public abstract class Packet {
 
     public abstract void encode( ByteBuf byteBuf );
 
-    public abstract void decode( ByteBuf byteBuf );
+    public abstract void decode(ByteBuf byteBuf);
 
 }

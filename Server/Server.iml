@@ -14,5 +14,6 @@
     <orderEntry type="module" module-name="Protocol" />
     <orderEntry type="library" name="Maven: io.netty:netty-all:5.0.0.Alpha2" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:19.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.2.1" level="project" />
   </component>
 </module>

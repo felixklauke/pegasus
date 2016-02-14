@@ -17,43 +17,52 @@
 package de.felix_klauke.pegasus.protocol.packets;
 
 import de.felix_klauke.pegasus.protocol.Packet;
+import de.felix_klauke.pegasus.protocol.PacketType;
 import de.felix_klauke.pegasus.protocol.util.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 
 /**
- * Created by Felix Klauke for project Pegasus on 08.02.2016.
+ * Created by Felix Klauke for project Pegasus on 14.02.2016.
  */
 public class PacketMessage extends Packet {
 
-    /* ------------------------- [ Fields ] ------------------------- */
-
+    private String author = "";
     private String message;
 
-    /* ------------------------- [ Constructors ] ------------------------- */
-
     public PacketMessage() {
-        super( PacketType.MESSAGE );
+        super(PacketType.MESSAGE);
     }
 
-    public PacketMessage( String message ) {
-        super( PacketType.MESSAGE );
+    public PacketMessage(String message) {
+        super(PacketType.MESSAGE);
         this.message = message;
     }
 
-    /* ------------------------- [ Methods ] ------------------------- */
-
     @Override
-    public void encode( ByteBuf byteBuf ) {
-        ByteBufUtils.writeUTF8String( byteBuf, message );
+    public void encode(ByteBuf byteBuf) {
+        ByteBufUtils.writeUTF8String(byteBuf, message);
+        ByteBufUtils.writeUTF8String(byteBuf, author);
     }
 
     @Override
-    public void decode( ByteBuf byteBuf ) {
-        message = ByteBufUtils.readUTF8String( byteBuf );
+    public void decode(ByteBuf byteBuf) {
+        author = ByteBufUtils.readUTF8String(byteBuf);
+        message = ByteBufUtils.readUTF8String(byteBuf);
     }
 
     public String getMessage() {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 }
