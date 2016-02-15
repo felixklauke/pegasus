@@ -58,7 +58,7 @@ public class NettyClient {
 
         try {
 
-            ChannelFuture future = bootstrap.connect("localhost", 27816).sync();
+            ChannelFuture future = bootstrap.connect("felix-klauke.de", 27816).sync();
             channel = channelInitializer.getChannel();
 
             logger.info("NettyClient is connected. Blocking Thread with the Client now...");
@@ -78,6 +78,7 @@ public class NettyClient {
     }
 
     public void send(Object object) {
+        System.out.println("Sending a packet");
         getChannel().writeAndFlush(object);
     }
 

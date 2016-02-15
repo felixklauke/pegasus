@@ -69,9 +69,11 @@ public class PacketHandler extends ChannelHandlerAdapter {
                 PacketHandshake packetHandshake = (PacketHandshake) msg;
                 boolean success = userManager.authUser(packetHandshake.getUsername(), packetHandshake.getPassword());
 
+                System.out.println(success);
+
                 PacketHandshakeResponse response = new PacketHandshakeResponse();
                 response.setResult(success ? HandshakeResult.SUCCESS : HandshakeResult.FAILURE);
-                ctx.pipeline().channel().writeAndFlush(response);
+                ctx.channel().writeAndFlush(response);
                 return;
             }
             ctx.pipeline().channel().close();
@@ -84,7 +86,7 @@ public class PacketHandler extends ChannelHandlerAdapter {
     }
 
     public void handlePacket(Channel channel, Packet packet) {
-        logger.info("Handling a new Packet: " + packet.getPacketType().name());
+        logger.info("Handling a new Packet: " + Packet.getPacketType().name());
         for (Map.Entry<PacketListener, Class> entry : listeners.entrySet()) {
             if (entry.getValue() == packet.getClass()) {
                 entry.getKey().handlePacket(channel, packet);

@@ -17,7 +17,6 @@
 package de.felix_klauke.pegasus.client;
 
 import de.felix_klauke.pegasus.client.network.NettyClient;
-import de.felix_klauke.pegasus.protocol.packets.PacketMessage;
 
 import java.util.logging.Logger;
 
@@ -39,17 +38,10 @@ public class Client {
     }
 
     public void start() {
-        new Thread(new Runnable() {
-            public void run() {
-                nettyClient.start();
-            }
-        }).start();
-        try {
-            Thread.sleep(10000);
-            nettyClient.send(new PacketMessage("Hey"));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        nettyClient.start();
     }
 
+    public NettyClient getNettyClient() {
+        return nettyClient;
+    }
 }
