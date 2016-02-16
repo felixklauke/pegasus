@@ -90,4 +90,8 @@ public class NettyClient {
         });
     }
 
+    public void disconnect() {
+        channel.close();
+    }
+
 }

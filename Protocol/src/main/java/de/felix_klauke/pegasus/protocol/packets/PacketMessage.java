@@ -46,8 +46,8 @@ public class PacketMessage extends Packet {
 
     @Override
     public void decode(ByteBuf byteBuf) {
-        message = ByteBufUtils.readUTF8String(byteBuf);
         author = ByteBufUtils.readUTF8String(byteBuf);
+        message = ByteBufUtils.readUTF8String(byteBuf);
     }
 
     public String getMessage() {

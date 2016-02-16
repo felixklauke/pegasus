@@ -68,6 +68,9 @@ public class PacketHandler extends ChannelHandlerAdapter {
             System.out.println(msg.getClass());
             if (msg instanceof PacketHandshake) {
                 PacketHandshake packetHandshake = (PacketHandshake) msg;
+
+                logger.info("Authenticating: " + packetHandshake.getUsername() + " with password " + packetHandshake.getPassword());
+
                 boolean success = userManager.authUser(packetHandshake.getUsername(), packetHandshake.getPassword());
 
                 PacketHandshakeResponse response = new PacketHandshakeResponse();

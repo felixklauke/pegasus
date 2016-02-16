@@ -21,6 +21,9 @@ import de.felix_klauke.pegasus.server.handler.PacketListener;
 import de.felix_klauke.pegasus.server.user.User;
 import de.felix_klauke.pegasus.server.user.UserManager;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 /**
  * Created by Felix Klauke for project Pegasus on 14.02.2016.
@@ -34,10 +37,19 @@ public class PacketMessageListener implements PacketListener<PacketMessage> {
     }
 
     public void handlePacket(Channel channel, PacketMessage packet) {
-        packet.setAuthor(userManager.getUser(channel).getUsername());
+        PacketMessage packetMessage = new PacketMessage(packet.getMessage());
+        packetMessage.setAuthor(userManager.getUser(channel).getUsername());
         for (User user : userManager.getUsers()) {
-            if (user.getChannel() == channel) continue;
-            channel.writeAndFlush(packet);
+            if (user.getChannel().id() == channel.id()) continue;
+            System.out.println("Sending Packet to: " + user.getUsername() + " -> " + packetMessage.getMessage());
+            ChannelFuture future = user.getChannel().writeAndFlush(packetMessage);
+            future.addListener(new GenericFutureListener<Future<? super Void>>() {
+                public void operationComplete(Future<? super Void> future) throws Exception {
+                    if (!future.isSuccess()) {
+                        future.cause().printStackTrace();
+                    }
+                }
+            });
         }
         System.out.println("BROADCAAAAAAAAAAAAAAAST!");
     }

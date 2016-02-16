@@ -65,5 +65,6 @@ public class PacketHandler extends ChannelHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         logger.warning("An error occured in the client packet handler: " + cause.getLocalizedMessage());
+        cause.printStackTrace();
     }
 }
