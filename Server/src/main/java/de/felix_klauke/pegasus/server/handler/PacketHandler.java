@@ -25,10 +25,9 @@ import de.felix_klauke.pegasus.protocol.packets.wrapper.HandshakeResult;
 import de.felix_klauke.pegasus.server.handler.listener.PacketMessageListener;
 import de.felix_klauke.pegasus.server.user.User;
 import de.felix_klauke.pegasus.server.user.UserManager;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerAdapter;
-import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.*;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -62,6 +61,8 @@ public class PacketHandler extends ChannelHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
+        logger.info("Handling incoming data.");
+
         User user = userManager.getUser(ctx.pipeline().channel());
         if (user == null) {
             System.out.println(msg.getClass());
@@ -69,11 +70,19 @@ public class PacketHandler extends ChannelHandlerAdapter {
                 PacketHandshake packetHandshake = (PacketHandshake) msg;
                 boolean success = userManager.authUser(packetHandshake.getUsername(), packetHandshake.getPassword());
 
-                System.out.println(success);
-
                 PacketHandshakeResponse response = new PacketHandshakeResponse();
                 response.setResult(success ? HandshakeResult.SUCCESS : HandshakeResult.FAILURE);
-                ctx.channel().writeAndFlush(response);
+                if (success) {
+                    userManager.createUser(packetHandshake.getUsername(), ctx.channel());
+                }
+                ChannelFuture future = ctx.channel().writeAndFlush(response);
+                future.addListener(new GenericFutureListener<Future<? super Void>>() {
+                    public void operationComplete(Future<? super Void> future) throws Exception {
+                        if (!future.isSuccess()) {
+                            future.cause().printStackTrace();
+                        }
+                    }
+                });
                 return;
             }
             ctx.pipeline().channel().close();
@@ -86,7 +95,7 @@ public class PacketHandler extends ChannelHandlerAdapter {
     }
 
     public void handlePacket(Channel channel, Packet packet) {
-        logger.info("Handling a new Packet: " + Packet.getPacketType().name());
+        logger.info("Handling a new Packet: " + packet.getPacketType().name());
         for (Map.Entry<PacketListener, Class> entry : listeners.entrySet()) {
             if (entry.getValue() == packet.getClass()) {
                 entry.getKey().handlePacket(channel, packet);

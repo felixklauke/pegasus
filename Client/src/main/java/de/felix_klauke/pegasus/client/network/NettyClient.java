@@ -23,6 +23,8 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 import java.util.logging.Logger;
 
@@ -59,11 +61,10 @@ public class NettyClient {
         try {
 
             ChannelFuture future = bootstrap.connect("felix-klauke.de", 27816).sync();
-            channel = channelInitializer.getChannel();
+            channel = future.channel();
 
             logger.info("NettyClient is connected. Blocking Thread with the Client now...");
-
-            future.sync().channel().closeFuture().sync();
+            future.channel().closeFuture();
         } catch ( InterruptedException e ) {
             e.printStackTrace();
         }
@@ -79,7 +80,14 @@ public class NettyClient {
 
     public void send(Object object) {
         System.out.println("Sending a packet");
-        getChannel().writeAndFlush(object);
+        ChannelFuture future = getChannel().writeAndFlush(object);
+        future.addListener(new GenericFutureListener<Future<? super Void>>() {
+            public void operationComplete(Future<? super Void> future) throws Exception {
+                if (!future.isSuccess()) {
+                    future.cause().printStackTrace();
+                }
+            }
+        });
     }
 
 }

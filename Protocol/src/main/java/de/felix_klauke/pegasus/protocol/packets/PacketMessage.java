@@ -26,7 +26,7 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketMessage extends Packet {
 
-    private String author = "";
+    private String author = "A";
     private String message;
 
     public PacketMessage() {
@@ -40,14 +40,14 @@ public class PacketMessage extends Packet {
 
     @Override
     public void encode(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, message);
         ByteBufUtils.writeUTF8String(byteBuf, author);
+        ByteBufUtils.writeUTF8String(byteBuf, message);
     }
 
     @Override
     public void decode(ByteBuf byteBuf) {
-        author = ByteBufUtils.readUTF8String(byteBuf);
         message = ByteBufUtils.readUTF8String(byteBuf);
+        author = ByteBufUtils.readUTF8String(byteBuf);
     }
 
     public String getMessage() {

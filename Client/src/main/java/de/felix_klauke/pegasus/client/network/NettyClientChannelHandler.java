@@ -19,7 +19,6 @@ package de.felix_klauke.pegasus.client.network;
 import de.felix_klauke.pegasus.client.handler.PacketHandler;
 import de.felix_klauke.pegasus.protocol.decoder.PacketDecoder;
 import de.felix_klauke.pegasus.protocol.encoder.PacketEncoder;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 
@@ -32,7 +31,6 @@ public class NettyClientChannelHandler extends ChannelInitializer<SocketChannel>
 
     private PacketHandler packetHandler;
     private Logger logger;
-    private Channel channel;
 
     public NettyClientChannelHandler(Logger logger, PacketHandler packetHandler) {
         this.logger = logger;
@@ -50,13 +48,8 @@ public class NettyClientChannelHandler extends ChannelInitializer<SocketChannel>
                 new PacketDecoder(),
                 packetHandler
         );
-        channel = socketChannel.pipeline().channel();
 
         logger.info("Channelpipeline has been created.");
-    }
-
-    public Channel getChannel() {
-        return channel;
     }
 
 }

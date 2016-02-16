@@ -23,13 +23,13 @@ import io.netty.buffer.ByteBuf;
  */
 public abstract class Packet {
 
-    private static PacketType packetType;
+    private PacketType packetType;
 
     public Packet( PacketType packetType ) {
-        Packet.packetType = packetType;
+        this.packetType = packetType;
     }
 
-    public static PacketType getPacketType() {
+    public PacketType getPacketType() {
         return packetType;
     }
 
