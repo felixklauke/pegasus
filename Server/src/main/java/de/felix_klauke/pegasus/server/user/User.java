@@ -43,4 +43,5 @@ public class User {
     public void sendPacket(Packet packet) {
         channel.writeAndFlush(packet);
     }
+
 }

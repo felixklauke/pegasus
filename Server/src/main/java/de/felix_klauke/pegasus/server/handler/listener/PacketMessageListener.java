@@ -30,12 +30,30 @@ import io.netty.util.concurrent.GenericFutureListener;
  */
 public class PacketMessageListener implements PacketListener<PacketMessage> {
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * Use this Manager to handle the users
+     */
     private UserManager userManager;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * @param userManager the UserManager
+     */
     public PacketMessageListener(UserManager userManager) {
         this.userManager = userManager;
     }
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * Handle any incoming PacketMessage.
+     *
+     * @param channel the channel the message cam from
+     * @param packet  the packet
+     */
     public void handlePacket(Channel channel, PacketMessage packet) {
         PacketMessage packetMessage = new PacketMessage(packet.getMessage());
         packetMessage.setAuthor(userManager.getUser(channel).getUsername());
@@ -51,7 +69,6 @@ public class PacketMessageListener implements PacketListener<PacketMessage> {
                 }
             });
         }
-        System.out.println("BROADCAAAAAAAAAAAAAAAST!");
     }
 
 }

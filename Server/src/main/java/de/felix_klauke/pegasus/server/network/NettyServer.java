@@ -18,6 +18,7 @@ package de.felix_klauke.pegasus.server.network;
 
 import de.felix_klauke.pegasus.server.handler.PacketHandler;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -30,12 +31,42 @@ import java.util.logging.Logger;
  */
 public class NettyServer {
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * The logger to log errors with.
+     */
     private Logger logger;
+
+    /**
+     * The netty bootstrap that will be used for the connection from all Clients.
+     */
     private ServerBootstrap serverBootstrap;
 
+    /**
+     * Netty will need an Initializer that handles the initialization of a new Channel.
+     */
     private NettyServerChannelHandler channelInitializer;
+
+    /**
+     * Netty will create this Channel. It's the way in the wide world or just the channel ending
+     * at the client.
+     */
+    private Channel channel;
+
+    /**
+     * All Packets will be handled by this handler.
+     */
     private PacketHandler packetHandler;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * This Constructor will create a new NettyServer. The Logger will be assigned, the Bootstrap
+     * and the packethandler will be created. At the end the Netty ChannelInitializer will be created.
+     *
+     * @param logger the logger to log all information with
+     */
     public NettyServer(Logger logger) {
         this.logger = logger;
         this.serverBootstrap = new ServerBootstrap();
@@ -43,6 +74,11 @@ public class NettyServer {
         this.channelInitializer = new NettyServerChannelHandler(logger, packetHandler);
     }
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * Start the most epic Server ever.
+     */
     public void start() {
         logger.info("Starting Netty Server...");
 

@@ -56,7 +56,7 @@ public class NettyClientChannelHandler extends ChannelInitializer<SocketChannel>
 
     /**
      * Netty will call this method whenever a new Channel has to get initialized.
-     * The ChannelPipeline willl be filled in this Method. Basically with this structure:
+     * The ChannelPipeline will be filled in this Method. Basically with this structure:
      * <p>
      * <ol>
      * <li>{@link de.felix_klauke.pegasus.protocol.encoder.PacketEncoder}</li>

@@ -25,20 +25,43 @@ import java.util.logging.Logger;
  */
 public class Server {
 
-    //27816
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * The Logger to log all information
+     */
     private Logger logger;
+
+    /**
+     * The NettyServer
+     */
     private NettyServer nettyServer;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * The Logger and the Netty Server will be created.
+     */
     public Server() {
         logger = Logger.getLogger(Server.class.getSimpleName());
 
         nettyServer = new NettyServer(logger);
     }
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * Nuffing to say.
+     *
+     * @param args
+     */
     public static void main( String[] args ) {
         new Server().start();
     }
 
+    /**
+     * Start the server <3
+     */
     public void start() {
         nettyServer.start();
     }

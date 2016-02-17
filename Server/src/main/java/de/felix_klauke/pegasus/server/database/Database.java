@@ -29,14 +29,20 @@ import java.util.Collections;
  */
 public class Database {
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
     private MongoCollection collection;
     private MongoDatabase database;
+
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
 
     public Database(MongoCredential credential, String database, String collection) {
         final MongoClient mongoClient = new MongoClient(new ServerAddress("5.1.82.58", 27017), Collections.singletonList(credential));
         this.database = mongoClient.getDatabase(database);
         this.collection = this.database.getCollection(collection);
     }
+
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
 
     public MongoCollection getCollection() {
         return collection;

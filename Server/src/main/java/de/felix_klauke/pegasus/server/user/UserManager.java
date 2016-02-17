@@ -30,15 +30,37 @@ import java.util.List;
  */
 public class UserManager {
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /*
+     * A List of all avtice users
+     */
     private List<User> users;
+
+    /**
+     * The Database the users are stored in
+     */
     private Database userDatabase;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * Creates the UserManager and connects to the Database
+     */
     public UserManager() {
         users = Lists.newArrayList();
         userDatabase = new Database(MongoCredential.createScramSha1Credential("user", "imladria",
                 "zetaStar12".toCharArray()), "imladria", "users");
     }
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * Get a User by its Channel
+     *
+     * @param channel
+     * @return
+     */
     public User getUser(Channel channel) {
         for (User user : users) {
             if (user.getChannel() == channel) return user;
@@ -46,6 +68,14 @@ public class UserManager {
         return null;
     }
 
+    /**
+     *
+     * Authenticate an user
+     *
+     * @param username the username to auth with
+     * @param password the password to auth with
+     * @return whether the authentication was successfully
+     */
     public boolean authUser(String username, String password) {
         FindIterable<Document> iterable = this.userDatabase.getCollection().find(
                 new Document().append("username", username)
@@ -57,6 +87,14 @@ public class UserManager {
         return false;
     }
 
+    /**
+     *
+     * Create a new User when he logs in
+     *
+     * @param username the name of the user
+     * @param channel the channel the user logged in in
+     * @return the user
+     */
     public User createUser(String username, Channel channel) {
         User user = new User(channel, username);
         users.add(user);
