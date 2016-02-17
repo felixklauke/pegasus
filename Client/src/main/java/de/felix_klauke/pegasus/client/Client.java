@@ -25,22 +25,49 @@ import java.util.logging.Logger;
  */
 public class Client {
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * The logger to log all information
+     */
     private Logger logger;
+
+    /*
+     * The NettyClient that will be created after calling the Cunstructor or the main Method.
+     */
     private NettyClient nettyClient;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * The Logger and the NettyClient will be created.
+     */
     public Client() {
         logger = Logger.getLogger(Client.class.getSimpleName());
         nettyClient = new NettyClient(logger);
     }
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * Nothing to say... zzzzzZZZZZ
+     *
+     * @param args args... use them or let it be...
+     */
     public static void main( String[] args ) {
         new Client().start();
     }
 
+    /**
+     * Start the NettyClient
+     */
     public void start() {
         nettyClient.start();
     }
 
+    /**
+     * @return the NettyClient
+     */
     public NettyClient getNettyClient() {
         return nettyClient;
     }

@@ -33,14 +33,43 @@ import java.util.logging.Logger;
  */
 public class NettyClient {
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * The logger to log errors with.
+     */
     private Logger logger;
+
+    /**
+     * The netty bootstrap that will be used for the connection to the server.
+     */
     private Bootstrap bootstrap;
 
+    /**
+     * Netty will need an Initializer that handles the initialization of a new Channel.
+     */
     private NettyClientChannelHandler channelInitializer;
+
+    /**
+     * Netty will create this Channel. It's the way in the wide world or just the channel ending
+     * at the server.
+     */
     private Channel channel;
 
+    /**
+     * All Packets will be handled by this handler.
+     */
     private PacketHandler packetHandler;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * This Constructor will create a new NettyClient. To connect the Client to the server you
+     * will have to use {@link NettyClient#start()}. The Logger will be assigned, the Bootstrap
+     * and the packethandler will be created. At the end the Netty ChannelInitializer will be created.
+     *
+     * @param logger the logger to log all information with
+     */
     public NettyClient(Logger logger) {
         this.logger = logger;
         this.bootstrap = new Bootstrap();
@@ -48,6 +77,11 @@ public class NettyClient {
         this.channelInitializer = new NettyClientChannelHandler(logger, packetHandler);
     }
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * Start the Netty Client and connect it to the server.
+     */
     public void start() {
         logger.info("Starting netty Client...");
 
@@ -70,14 +104,33 @@ public class NettyClient {
         }
     }
 
+    /**
+     *
+     * Use this channel to write any packet to the server.
+     *
+     * @return the channel
+     */
     public Channel getChannel() {
         return channel;
     }
 
+    /**
+     *
+     * Use this PacketHandler to register all your PacketListeners.
+     *
+     * @return the packetHandler
+     */
     public PacketHandler getPacketHandler() {
         return packetHandler;
     }
 
+    /**
+     *
+     * You can send a new Object (would be cool when you choose a
+     * {@link de.felix_klauke.pegasus.protocol.Packet}).
+     *
+     * @param object the object to send through our pipeline
+     */
     public void send(Object object) {
         System.out.println("Sending a packet");
         ChannelFuture future = getChannel().writeAndFlush(object);
@@ -90,6 +143,9 @@ public class NettyClient {
         });
     }
 
+    /**
+     * Disconnects the Client from the server.
+     */
     public void disconnect() {
         channel.close();
     }

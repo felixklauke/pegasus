@@ -23,6 +23,14 @@ import io.netty.channel.Channel;
  */
 public interface PacketListener<T> {
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * The Method to implment.
+     *
+     * @param channel the channel any packet came from
+     * @param packet  the packet that was received
+     */
     void handlePacket(Channel channel, T packet);
 
 }

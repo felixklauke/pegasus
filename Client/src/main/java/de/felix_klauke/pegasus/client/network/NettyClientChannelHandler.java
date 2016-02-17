@@ -29,14 +29,49 @@ import java.util.logging.Logger;
  */
 public class NettyClientChannelHandler extends ChannelInitializer<SocketChannel> {
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * The packetHandler that will handle all packets.
+     */
     private PacketHandler packetHandler;
+
+    /**
+     * The Logger to log all important information.
+     */
     private Logger logger;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * The Logger and the packetHandler will be assigned.
+     *
+     * @param logger        the Logger to log all important inforamtion
+     * @param packetHandler the packetHandler that will handle all packets.
+     */
     public NettyClientChannelHandler(Logger logger, PacketHandler packetHandler) {
         this.logger = logger;
         this.packetHandler = packetHandler;
     }
 
+    /**
+     * Netty will call this method whenever a new Channel has to get initialized.
+     * The ChannelPipeline willl be filled in this Method. Basically with this structure:
+     * <p>
+     * <ol>
+     * <li>{@link de.felix_klauke.pegasus.protocol.encoder.PacketEncoder}</li>
+     * <li>{@link de.felix_klauke.pegasus.protocol.decoder.PacketDecoder}</li>
+     * <li>{@link de.felix_klauke.pegasus.client.handler.PacketHandler}</li>
+     * </ol>
+     * <p>
+     * In a future Version a two new Elements will be added. Especially:
+     * The {@link io.netty.handler.codec.LengthFieldPrepender} and
+     * {@link io.netty.handler.codec.LengthFieldBasedFrameDecoder} to ensure all data is
+     * received before the decoding starts.
+     *
+     * @param socketChannel the cocketChannel that is getting initialized
+     * @throws Exception will be thrown when an error occured during creating the pipeline.
+     */
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         logger.info("A new Channel has been initialized.\n" +
