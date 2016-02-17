@@ -26,6 +26,17 @@ import io.netty.handler.codec.MessageToByteEncoder;
  */
 public class PacketEncoder extends MessageToByteEncoder<Packet> {
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * This Method will encode any Packet that wants through our Pipeline. All the content of a Packet will be
+     * written into a ByteBuf and the packetID will be prepended.
+     *
+     * @param channelHandlerContext the context of the channel used to send the data
+     * @param packet                the packet to encode
+     * @param byteBuf               the bytebuf to encode the Packet hin
+     * @throws Exception will be thrown when the encoding fails
+     */
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Packet packet, ByteBuf byteBuf) throws Exception {
         byteBuf.writeInt(packet.getPacketType().getPacketID());

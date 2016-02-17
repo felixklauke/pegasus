@@ -26,24 +26,52 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketMessage extends Packet {
 
-    private String author = "A";
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * The author of the message. Is set by Server so by default the auhtor is called "Unknown"
+     */
+    private String author = "Unknown";
+
+    /**
+     * Message.
+     */
     private String message;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * Standard Constructor. Will be used to handle incoming packet.
+     */
     public PacketMessage() {
         super(PacketType.MESSAGE);
     }
 
+    /**
+     * Constructor to use when you want to send a packet. It will assign all given parameters.
+     *
+     * @param message message.
+     */
     public PacketMessage(String message) {
         super(PacketType.MESSAGE);
         this.message = message;
     }
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * @param byteBuf the bytebof to encode the packet in
+     */
     @Override
     public void encode(ByteBuf byteBuf) {
         ByteBufUtils.writeUTF8String(byteBuf, author);
         ByteBufUtils.writeUTF8String(byteBuf, message);
     }
 
+    /**
+     *
+     * @param byteBuf the bytebof to decode the packet from
+     */
     @Override
     public void decode(ByteBuf byteBuf) {
         author = ByteBufUtils.readUTF8String(byteBuf);

@@ -26,14 +26,39 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketHandshake extends Packet {
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * The username the client attempts to login with
+     */
     private String username;
+
+    /**
+     * The (encrypted) password the client wants to authenticate with
+     */
     private String password;
+
+    /**
+     * The id of the current Protocol
+     */
     private String protocolVersion;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * Standard Constructor. Will be used to handle incoming packet.
+     */
     public PacketHandshake() {
         super(PacketType.HANDSHAKE);
     }
 
+    /**
+     * Constructor to use when you want to send a packet. It will assign all given parameters.
+     *
+     * @param username        the username the client attempts to login with
+     * @param password        the (encrypted) password the client wants to authenticate with
+     * @param protocolVersion the id of the current Protocol
+     */
     public PacketHandshake(String username, String password, String protocolVersion) {
         super( PacketType.HANDSHAKE );
         this.username = username;
@@ -41,6 +66,12 @@ public class PacketHandshake extends Packet {
         this.protocolVersion = protocolVersion;
     }
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     *
+     * @param byteBuf the bytebof to encode the packet in
+     */
     @Override
     public void encode( ByteBuf byteBuf ) {
         ByteBufUtils.writeUTF8String(byteBuf, username);
@@ -48,6 +79,10 @@ public class PacketHandshake extends Packet {
         ByteBufUtils.writeUTF8String(byteBuf, protocolVersion);
     }
 
+    /**
+     *
+     * @param byteBuf the bytebof to decode the packet from
+     */
     @Override
     public void decode( ByteBuf byteBuf ) {
         username = ByteBufUtils.readUTF8String( byteBuf );

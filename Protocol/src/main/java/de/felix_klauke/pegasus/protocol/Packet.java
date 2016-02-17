@@ -23,19 +23,42 @@ import io.netty.buffer.ByteBuf;
  */
 public abstract class Packet {
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * The type of this packet
+     */
     private PacketType packetType;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * @param packetType the PacketType the packet will have
+     */
     public Packet( PacketType packetType ) {
         this.packetType = packetType;
     }
+
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
 
     public PacketType getPacketType() {
         return packetType;
     }
 
-
+    /**
+     *
+     * The Method to implement
+     *
+     * @param byteBuf the ByteBuf to encode in
+     */
     public abstract void encode(ByteBuf byteBuf);
 
+    /**
+     *
+     * The Method to implement
+     *
+     * @param byteBuf the ByteBuf to decode from
+     */
     public abstract void decode(ByteBuf byteBuf);
 
 }

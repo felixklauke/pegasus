@@ -31,6 +31,16 @@ import java.util.List;
  */
 public class PacketDecoder extends ByteToMessageDecoder {
 
+    /* ----------------------------------- [ Method ] ----------------------------------- */
+
+    /**
+     * This method will handle any incoming data. Neverminds about the type.
+     *
+     * @param channelHandlerContext the contect of the Channel the data comes from
+     * @param byteBuf               the incoming data
+     * @param list                  add all objects to continue to work with to this list
+     * @throws Exception will be thrown when handling the data fails
+     */
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
         if (byteBuf instanceof EmptyByteBuf) return;

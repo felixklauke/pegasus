@@ -26,22 +26,46 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketHandshakeResponse extends Packet {
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * The result of the handshake
+     */
     private HandshakeResult result;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * Standard Constructor. Will be used to handle incoming packet.
+     */
     public PacketHandshakeResponse() {
         super(PacketType.HANDSHAKE_RESULT);
     }
 
+    /**
+     * Constructor to use when you want to send a packet. It will assign all given parameters.
+     *
+     * @param result the result of the handshake
+     */
     public PacketHandshakeResponse(HandshakeResult result) {
         super(PacketType.HANDSHAKE_RESULT);
         this.result = result;
     }
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * @param byteBuf the bytebof to encode the packet in
+     */
     @Override
     public void encode(ByteBuf byteBuf) {
         byteBuf.writeInt(result.getStatusID());
     }
 
+    /**
+     *
+     * @param byteBuf the bytebof to decode the packet from
+     */
     @Override
     public void decode(ByteBuf byteBuf) {
         result = HandshakeResult.lookup(byteBuf.readInt());

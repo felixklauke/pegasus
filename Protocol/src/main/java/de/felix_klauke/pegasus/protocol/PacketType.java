@@ -25,18 +25,46 @@ import de.felix_klauke.pegasus.protocol.packets.PacketMessage;
  */
 public enum PacketType {
 
+    /* ----------------------------------- [ Enumeration ] ----------------------------------- */
+
     HANDSHAKE(PacketHandshake.class, 0),
     HANDSHAKE_RESULT(PacketHandshakeResponse.class, 1),
     MESSAGE(PacketMessage.class, 2);
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * The class the packet is defined in
+     */
     private final Class<? extends Packet> packetClass;
+
+    /**
+     * The uniqueID of the Packet
+     */
     private final int packetID;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * @param packetClass the class the packet is defined in
+     * @param packetID    the uniqueID of the Packet
+     */
     PacketType(Class<? extends Packet> packetClass, int packetID) {
         this.packetClass = packetClass;
         this.packetID = packetID;
     }
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     *
+     * Institate incoming Packet with this Method
+     *
+     * @param packetID th id of the packet
+     * @return and instance of the packet with the given id
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
     public static Packet lookup(int packetID) throws IllegalAccessException, InstantiationException {
         for (PacketType packetType : values()) {
             if (packetType.getPacketID() == packetID) return packetType.getPacketClass().newInstance();

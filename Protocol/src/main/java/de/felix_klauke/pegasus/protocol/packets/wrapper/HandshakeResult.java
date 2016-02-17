@@ -21,16 +21,38 @@ package de.felix_klauke.pegasus.protocol.packets.wrapper;
  */
 public enum HandshakeResult {
 
+    /* ----------------------------------- [ Enumeration ] ----------------------------------- */
+
     SUCCESS(0),
     FAILURE(1),
     ERROR(2);
 
+    /* ----------------------------------- [ Fields ] ----------------------------------- */
+
+    /**
+     * The uniqueID of the given Result
+     */
     private final int statusID;
 
+    /* ----------------------------------- [ Constructors ] ----------------------------------- */
+
+    /**
+     * Basic enum constructor
+     *
+     * @param statusID the uniqueID of the status
+     */
     HandshakeResult(int statusID) {
         this.statusID = statusID;
     }
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * Get any Result by its ID
+     *
+     * @param statusID the id of the status
+     * @return the status with the given id, will return null when no status with the id is known
+     */
     public static HandshakeResult lookup(int statusID) {
         for (HandshakeResult result : values()) {
             if (result.getStatusID() == statusID) return result;
@@ -38,6 +60,10 @@ public enum HandshakeResult {
         return null;
     }
 
+    /**
+     *
+     * @return the statusID of the given status
+     */
     public int getStatusID() {
         return statusID;
     }

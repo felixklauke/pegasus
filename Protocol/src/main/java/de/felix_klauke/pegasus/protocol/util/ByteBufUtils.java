@@ -24,18 +24,40 @@ import io.netty.buffer.ByteBuf;
  */
 public class ByteBufUtils {
 
+    /* ----------------------------------- [ Methods ] ----------------------------------- */
+
+    /**
+     * Write an UTF-8 String into a ByteBuf.
+     *
+     * @param byteBuf the bytebuf to write the String in
+     * @param string  the String to write
+     */
     public static void writeUTF8String( ByteBuf byteBuf, String string ) {
         byte[] bytes = string.getBytes( Charsets.UTF_8 );
         byteBuf.writeInt( bytes.length );
         byteBuf.writeBytes( bytes );
     }
 
+    /**
+     *
+     * Write UTF-8 Strings into a ByteBuf.
+     *
+     * @param byteBuf the bytebuf to write the Strings in
+     * @param strings the Strings to write
+     */
     public static void writeUTF8Strings( ByteBuf byteBuf, String... strings ) {
         for ( String string : strings ) {
             writeUTF8String( byteBuf, string );
         }
     }
 
+    /**
+     *
+     * Read an UTF-8 String from a ByteBuf.
+     *
+     * @param byteBuf the bytebuf to read from
+     * @return the String
+     */
     public static String readUTF8String( ByteBuf byteBuf ) {
         int length = byteBuf.readInt();
         String string = byteBuf.toString( byteBuf.readerIndex(), length, Charsets.UTF_8 );
