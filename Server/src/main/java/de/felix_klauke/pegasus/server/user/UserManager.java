@@ -50,7 +50,7 @@ public class UserManager {
     public UserManager() {
         users = Lists.newArrayList();
         userDatabase = new Database(MongoCredential.createScramSha1Credential("user", "imladria",
-                "zetaStar12".toCharArray()), "imladria", "users");
+                "derKLud".toCharArray()), "imladria", "users");
     }
 
     /* ----------------------------------- [ Methods ] ----------------------------------- */
